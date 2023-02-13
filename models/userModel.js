@@ -1,35 +1,32 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  password: {
-    type: String,
-    required: [true, "Set password for user"],
-  },
   email: {
     type: String,
     required: [true, "Email is required"],
     unique: true,
   },
-//   subscription: {
-//     type: String,
-//     enum: ["starter", "pro", "business"],
-//     default: "starter",
-//   },
+  password: {
+    type: String,
+    required: [true, "Set password for user"],
+  },
+  name: {
+    type: String,
+    required: [true, "Name is required"],
+  },
+  city: {
+    type: String,
+    required: [true, "City is required"],
+    default: "starter",
+  },
+  phone: {
+    type: String,
+    required: [true, "Mobile phone is required"],
+    default: null,
+  },
   token: {
     type: String,
     default: null,
-  },
-  avatarURL: {
-    type: String,
-    default: null,
-  },
-  verify: {
-    type: Boolean,
-    default: false,
-  },
-  verificationToken: {
-    type: String,
-    required: [true, "Verify token is required"],
   },
 });
 
