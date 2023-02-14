@@ -1,25 +1,17 @@
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const { checkCredentials } = require("../helper/checkCredentials");
 const { ErrorConstructor } = require("../helper/errors");
 const { User } = require("../models/userModel");
 
-const registerUser = async (email, password, name, city, phone) => {
+const registerUser = async (body) => {
+  const { email } = body;
   const candidate = await User.findOne({ email });
 
   if (candidate) {
     throw new ErrorConstructor(409, "Email in use");
   }
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  const user = new User({
-    email,
-    password: hashedPassword,
-    name,
-    city,
-    phone,
-  });
+  const user = new User(body);
 
   await user.save();
 
@@ -28,11 +20,7 @@ const registerUser = async (email, password, name, city, phone) => {
 
 const loginUser = async ({ email, password }) => {
   const candidate = await User.findOne({ email });
-  const isPasswordCorrect = await bcrypt.compare(password, candidate.password);
-
-  if (!candidate || !isPasswordCorrect) {
-    throw new ErrorConstructor(401, "Wrong email or password");
-  }
+  checkCredentials(candidate, password);
 
   const token = jwt.sign(
     { _id: candidate._id, email: candidate.email },
@@ -40,9 +28,10 @@ const loginUser = async ({ email, password }) => {
     { expiresIn: "1d" }
   );
 
-  await User.findByIdAndUpdate(candidate._id, { $set: { token } });
-
-  return token;
+  const user = await User.findByIdAndUpdate(candidate._id, {
+    $set: { token },
+  }).select({ password: 0, token: 0 });
+  return { user, token };
 };
 
 const logoutUser = async (_id) => {
