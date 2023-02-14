@@ -1,5 +1,5 @@
 class ErrorConstructor extends Error {
-  constructor(message, statusCode) {
+  constructor(statusCode, message) {
     super(message);
     this.status = statusCode;
   }

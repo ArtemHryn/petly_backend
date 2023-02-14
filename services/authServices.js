@@ -36,12 +36,24 @@ const loginUser = async ({ email, password }) => {
 
 const logoutUser = async (_id) => {
   await User.findByIdAndUpdate(_id, { $set: { token: null } });
+};
 
-  return { message: "The user was logged out" };
+const current = async (_id) => {
+  const user = await User.findOne({ _id }).select({ password: 0, token: 0 });
+  return user;
+};
+
+const updateUser = async (_id, body) => {
+  // you can update password also
+  const user = await User.findById(_id);
+  Object.assign(user, body);
+  user.save();
 };
 
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
+  current,
+  updateUser,
 };

@@ -1,8 +1,9 @@
-
 const {
   registerUser,
   loginUser,
   logoutUser,
+  current,
+  updateUser,
 } = require("../services/authServices");
 
 const registrationController = async (req, res) => {
@@ -25,8 +26,22 @@ const logoutController = async (req, res) => {
   res.status(204).end();
 };
 
+const currentController = async (req, res) => {
+  const { _id } = req.user;
+  const currentUser = await current(_id);
+  res.status(200).json({ user: currentUser });
+};
+
+const updateUserController = async (req, res) => {
+  const { _id } = req.user;
+  await updateUser(_id, req.body);
+  res.status(200).json({ message: "user has been updated" });
+};
+
 module.exports = {
   registrationController,
   loginController,
   logoutController,
+  currentController,
+  updateUserController,
 };
