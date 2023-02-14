@@ -24,6 +24,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    userPhotoURL: {
+      type: String,
+      default: null,
+    },
+    birthday: {
+      type: Date,
+      default: Date.now(),
+    },
     token: {
       type: String,
       default: null,

@@ -13,6 +13,8 @@ const {
   registrationController,
   loginController,
   logoutController,
+  currentController,
+  updateUserController,
 } = require("../../controllers/authControllers");
 
 router.post(
@@ -20,11 +22,12 @@ router.post(
   registrationValidation,
   asyncWrapper(registrationController)
 );
-router.post(
-  "/login",
-  loginValidation,
-  asyncWrapper(loginController)
-);
+router.post("/login", loginValidation, asyncWrapper(loginController));
+
 router.get("/logout", checkJWT, asyncWrapper(logoutController));
+
+router.get("/current", checkJWT, asyncWrapper(currentController));
+
+router.patch("/update", checkJWT, asyncWrapper(updateUserController));
 
 module.exports = router;
