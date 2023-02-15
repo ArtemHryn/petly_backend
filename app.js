@@ -6,8 +6,12 @@ const { errorHandler } = require("./helper/apiHelper");
 const authRouter = require("./routes/api/authRouter");
 
 const app = express();
+const formatsLogger = process.env.NODE_ENV === 'development' ? 'dev' : 'short';
 
-const formatsLogger = process.env.NODE_ENV === "development" ? "dev" : "short";
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(logger(formatsLogger));
 app.use(cors());
