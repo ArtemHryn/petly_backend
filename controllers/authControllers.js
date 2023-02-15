@@ -4,7 +4,8 @@ const {
   logoutUser,
   current,
   updateUser,
-} = require("../services/authServices");
+  updatePhoto,
+} = require('../services/authServices');
 
 const registrationController = async (req, res) => {
   const { email, name } = await registerUser(req.body);
@@ -35,13 +36,21 @@ const currentController = async (req, res) => {
 const updateUserController = async (req, res) => {
   const { _id } = req.user;
   await updateUser(_id, req.body);
-  res.status(200).json({ message: "user has been updated" });
+  res.status(200).json({ message: 'user has been updated' });
 };
 
+const updatePhotoController = async (req, res) => {
+  const { _id } = req.user;
+  console.log(req.file);
+
+  const {userPhotoURL} = await updatePhoto(_id, req.file.path)
+  res.status(200).json({ userPhotoURL });
+};
 module.exports = {
   registrationController,
   loginController,
   logoutController,
   currentController,
   updateUserController,
+  updatePhotoController,
 };

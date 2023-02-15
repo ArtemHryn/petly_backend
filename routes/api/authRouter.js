@@ -15,7 +15,9 @@ const {
   logoutController,
   currentController,
   updateUserController,
+  updatePhotoController,
 } = require("../../controllers/authControllers");
+const uploadCloud = require("../../middlewares/photosUploadMiddleware");
 
 router.post(
   "/signup",
@@ -29,5 +31,10 @@ router.get("/logout", checkJWT, asyncWrapper(logoutController));
 router.get("/current", checkJWT, asyncWrapper(currentController));
 
 router.patch("/update", checkJWT, asyncWrapper(updateUserController));
+router.patch(
+  '/photo',
+  [checkJWT, uploadCloud.single('userPhoto')],
+  asyncWrapper(updatePhotoController)
+);
 
 module.exports = router;
