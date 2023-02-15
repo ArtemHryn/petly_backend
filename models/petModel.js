@@ -8,14 +8,14 @@ const petSchema = new Schema(
     },
     date: {
       type: String,
-      // default: Date.now,
-      required: [true, "Date must be in format 22.10.2022"],
+      default: " 00/00/0000",
+      // required: [true, "Date must be in format 22.02.2023"],
     },
     breed: {
       type: String,
       required: [true, "Breed is required"],
     },
-    avatar: {
+    avatarURL: {
       type: String,
     },
     comments: {

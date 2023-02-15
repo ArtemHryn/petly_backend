@@ -8,10 +8,11 @@ const addPet = async (req, res) => {
 };
 
 const deletePetById = async (req, res) => {
-  const { id } = req.params;
-  const result = await Pet.findByIdAndRemove(id);
+  const { myPetId } = req.params;
+  const { _id: owner } = req.user;
+  const result = await Pet.findOneAndDelete({ _id: myPetId, owner });
   if (!result) {
-    throw ErrorConstructor(404);
+    throw ErrorConstructor(404, "Not found");
   }
   res.status(200).json({ message: "Pet deleted" });
 };
