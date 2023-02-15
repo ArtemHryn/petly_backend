@@ -24,6 +24,7 @@
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
     "sha256": "^0.2.0",
+    "swagger-ui-express": "^4.6.0",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {

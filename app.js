@@ -8,8 +8,12 @@ const petsRouter = require("./routes/api/petsRouter");
 const newsRouter = require("./routes/api/newsRouter");
 
 const app = express();
+const formatsLogger = process.env.NODE_ENV === 'development' ? 'dev' : 'short';
 
-const formatsLogger = process.env.NODE_ENV === "development" ? "dev" : "short";
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(logger(formatsLogger));
 app.use(cors());
