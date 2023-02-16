@@ -4,8 +4,10 @@ const cors = require("cors");
 const { errorHandler } = require("./helper/apiHelper");
 
 const authRouter = require("./routes/api/authRouter");
+const noticesRouter = require("./routes/api/noticesRouter")
 const petsRouter = require("./routes/api/petsRouter");
 const newsRouter = require("./routes/api/newsRouter");
+
 
 const app = express();
 const formatsLogger = process.env.NODE_ENV === 'development' ? 'dev' : 'short';
@@ -20,6 +22,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/users/", authRouter);
+app.use("/notices", noticesRouter)
 app.use("/api/pets", petsRouter);
 app.use("/api/news", newsRouter);
 
