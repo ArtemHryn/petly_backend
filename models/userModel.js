@@ -5,20 +5,20 @@ const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: [true, 'Email is required'],
       unique: true,
     },
     password: {
       type: String,
-      required: [true, "Set password for user"],
+      required: [true, 'Set password for user'],
     },
     name: {
       type: String,
-      required: [true, "Name is required"],
+      required: [true, 'Name is required'],
     },
     city: {
       type: String,
-      default: "Uknown",
+      default: 'Uknown',
     },
     phone: {
       type: String,
@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'notice', }],
   },
   { timestamps: true, versionKey: false }
 );

@@ -4,6 +4,7 @@ const cors = require("cors");
 const { errorHandler } = require("./helper/apiHelper");
 
 const authRouter = require("./routes/api/authRouter");
+const noticesRouter = require("./routes/api/noticesRouter")
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/users/", authRouter);
+app.use("/notices", noticesRouter)
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
