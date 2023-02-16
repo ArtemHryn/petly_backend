@@ -1,19 +1,19 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const petSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, "Set name for pet"],
+      required: [true, 'Set name for pet'],
     },
     date: {
       type: String,
-      default: " 00/00/0000",
+      default: ' 00/00/0000',
       // required: [true, "Date must be in format 22.02.2023"],
     },
     breed: {
       type: String,
-      required: [true, "Breed is required"],
+      required: [true, 'Breed is required'],
     },
     avatarURL: {
       type: String,
@@ -23,14 +23,14 @@ const petSchema = new Schema(
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: "user",
-      // required: true,
+      ref: 'user',
+      required: true,
     },
   },
   { versionKey: false }
 );
 
-const Pet = model("pet", petSchema);
+const Pet = model('pet', petSchema);
 
 module.exports = {
   Pet,
