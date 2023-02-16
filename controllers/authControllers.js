@@ -10,7 +10,7 @@ const {
 const registrationController = async (req, res) => {
   const { email, name } = await registerUser(req.body);
 
-  res.status(200).json({ user: { email, name } });
+  res.status(201).json({ user: { email, name } });
 };
 
 const loginController = async (req, res) => {
