@@ -50,10 +50,17 @@ const updateUser = async (_id, body) => {
   user.save();
 };
 
+const updatePhoto = async (_id, fileURL) => {
+  const user = await User.findById(_id);
+  user.userPhotoURL = fileURL
+  return user.save()
+}
+
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
   current,
   updateUser,
+  updatePhoto,
 };
