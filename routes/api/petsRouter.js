@@ -4,7 +4,7 @@ const { asyncWrapper } = require('../../helper/apiHelper');
 const router = express.Router();
 const checkJWT = require('../../middlewares/authTokenCheck');
 
-const { addPet, deletePetById } = require('../../controllers/petsControllers');
+const { addPet, deletePetById, getAllPets } = require('../../controllers/petsControllers');
 const { addPetValidation } = require('../../middlewares/validation');
 const uploadCloud = require('../../middlewares/photosUploadMiddleware');
 
@@ -15,5 +15,6 @@ router.post(
 );
 
 router.delete('/:myPetId', checkJWT, asyncWrapper(deletePetById));
+router.get('/', checkJWT, asyncWrapper(getAllPets));
 
 module.exports = router;
