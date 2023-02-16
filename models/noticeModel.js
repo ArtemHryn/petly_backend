@@ -26,7 +26,7 @@ const noticeSchema = new Schema(
       maxlength: 50,
       default: 'no info',
     },
-    comments: { type: String, minlength: 8, maxlength: 120, required: true },
+    comments: { type: String, minlength: 8, maxlength: 120 },
     price: {
       type: Number,
       min: [1, 'Min price 1'],

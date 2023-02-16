@@ -16,6 +16,9 @@ const storage = new CloudinaryStorage({
       if (file.fieldname === 'userPhoto') {
         return 'avatars';
       }
+      if (file.fieldname === 'noticeAvatar') {
+        return 'noticeAvatar';
+      }
       return 'petsPhoto';
     },
     transformation: [{ width: 250 }],

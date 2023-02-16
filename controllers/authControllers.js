@@ -41,11 +41,10 @@ const updateUserController = async (req, res) => {
 
 const updatePhotoController = async (req, res) => {
   const { _id } = req.user;
-  console.log(req.file);
-
-  const {userPhotoURL} = await updatePhoto(_id, req.file.path)
+  const { userPhotoURL } = await updatePhoto(_id, req.file.path);
   res.status(200).json({ userPhotoURL });
 };
+
 module.exports = {
   registrationController,
   loginController,
