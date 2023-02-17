@@ -7,6 +7,7 @@ const authRouter = require('./routes/api/authRouter');
 const noticesRouter = require('./routes/api/noticesRouter');
 const petsRouter = require('./routes/api/petsRouter');
 const newsRouter = require('./routes/api/newsRouter');
+const sponsorsRouter = require('./routes/api/sponsorsRouter')
 
 const app = express();
 const formatsLogger = process.env.NODE_ENV === 'development' ? 'dev' : 'short';
@@ -24,6 +25,7 @@ app.use('/users/', authRouter);
 app.use('/notices', noticesRouter);
 app.use('/pets', petsRouter);
 app.use('/news', newsRouter);
+app.use('/sponsors', sponsorsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
