@@ -19,12 +19,12 @@
       "description": "Authorization endpoints"
     },
     {
-      "name": "Services-sidebar",
-      "description": "Contact information endpoint"
-    },
-    {
       "name": "News",
       "description": "News endpoint"
+    },
+    {
+      "name": "Services-sidebar",
+      "description": "Contact information endpoint"
     },
     {
       "name": "Notices",
@@ -47,7 +47,7 @@
         "summary": "User registration",
 
         "requestBody": {
-          "description": "Reegistration's object",
+          "description": "Registration object",
           "required": true,
           "content": {
             "application/json": {
@@ -70,23 +70,11 @@
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           },
           "409": {
             "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           }
         }
       }
@@ -113,20 +101,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/LoginResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           }
         }
       }
@@ -147,37 +129,14 @@
         ],
         "security": [{ "Bearer": [] }],
 
-        "requestBody": {
-          "description": "Logout",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/"
-              }
-            }
-          }
-        },
         "responses": {
           "204": {
             "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
-                }
-              }
-            }
+            "content": {}
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           }
         }
       }
@@ -187,50 +146,31 @@
         "tags": ["Auth"],
         "summary": "Get current user",
 
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          }
+        ],
         "security": [{ "Bearer": [] }],
 
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "$ref": "#/components/schemas/CurrentUserResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           }
         }
       }
@@ -240,103 +180,87 @@
         "tags": ["Auth"],
         "summary": "Update user",
 
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          }
+        ],
         "security": [{ "Bearer": [] }],
 
         "requestBody": {
-          "description": "Reegistration's object",
+          "description": "Update object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
+                "$ref": "#/components/schemas/UpdateUserRequest"
               }
             }
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/UpdateUserResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           }
         }
       }
     },
-    "info": {
-      "get": {
-        "tags": ["Services-sidebar"],
-        "summary": "Get contact info",
+    "users/photo": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Update photo",
 
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          }
+        ],
         "security": [{ "Bearer": [] }],
 
         "requestBody": {
-          "description": "Reegistration's object",
+          "description": "Update photo",
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
+                "$ref": "#/components/schemas/PhotoRequest"
               }
             }
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/PhotoResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           }
         }
       }
@@ -345,6 +269,50 @@
       "get": {
         "tags": ["News"],
         "summary": "Get news",
+
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "type": "string",
+            "description": "Get page from query"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": true,
+            "type": "string",
+            "description": "Get limit from query"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNewsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        } 
+        }
+    },
+    "ourFriends": {
+      "get": {
+        "tags": ["Services-sidebar"],
+        "summary": "Get contact info",
 
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -1036,61 +1004,248 @@
 
   "components": {
     "schemas": {
-        "RegistrationRequest": {
-            "type": "object",
-            "required": ["email", "password", "name"],
-            "properties": {
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "password": {
-                "type": "string",
-                "description": "User's password",
-                "example": "qwerty123"
-              },
-              "name": {
-                "type": "string",
-                "description": "User's name",
-                "example": "Ben"
-              },
-              "city": {
-                "type": "string",
-                "description": "User's city",
-                "example": "Lviv"
-              },
-              "phone": {
-                "type": "string",
-                "description": "User's phone number",
-                "example": "(099)-999-99-99"
-              },
-              "birthday": {
-                "type": "string",
-                "description": "User's birthday",
-                "example": "01.01.2023"
-              }
-            }
-        },
-        "RegistrationResponse": { 
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "description": "User's email",
-                  "format": "email"
-                },
-                "name": {
-                  "type": "string",
-                  "description": "User's name",
-                  "example": "Mango"
-                }
-              }
-            },
-            "example": [{"email": "user2@mail.com", "userId": "4gsdg654sf6f4fd"}, { "email": "user2@mail.com", "userId": "6dfh6dh16dfh46h" }]
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["email", "password", "name"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Ben"
+          },
+          "city": {
+            "type": "string",
+            "description": "User's city",
+            "example": "Lviv"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone number",
+            "example": "(099)-999-99-99"
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "01.01.1999"
+          }
         }
+      },
+      "RegistrationResponse": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "name": {
+              "type": "string",
+              "description": "User's name",
+              "example": "Mango"
+            }
+          },
+        "example": [
+          { "email": "user2@mail.com", "userId": "4gsdg654sf6f4fd" },
+          { "email": "user2@mail.com", "userId": "6dfh6dh16dfh46h" }
+        ]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "name": {
+              "type": "string",
+              "description": "User's name",
+              "example": "Mango"
+            }
+          },
+          "token": {
+            "type": "string",
+            "description": "token",
+            "example": "eyJhbXVCJ9.mNvbSIsImlhdCI6MTY3MzYQ.RPgOOLAfl"
+          }
+        },
+        "example": {
+          "user": {
+            "email": "user2@mail.com",
+            "name": "4gsdg654sf6f4fd"
+          },
+          "token": "eyJhbXVCJ9.mNvbSIsImlhdCI6MTY3MzYQ.RPgOOLAflkgtfyt"
+        }
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Ben"
+          },
+          "city": {
+            "type": "string",
+            "description": "User's city",
+            "example": "Lviv"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone number",
+            "example": "(099)-999-99-99"
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "01.01.1999"
+          },
+          "userPhotoURL": {
+            "type": "string",
+            "description": "User's photo URL",
+            "example": "http://userphoto"
+          }
+        },
+        "example": {
+          "email": "user2@mail.com",
+          "name": "Mango",
+          "city": "Lviv",
+          "phone": "(099)-999-99-99",
+          "birthday": "01.01.1999",
+          "userPhotoURL": "http://userphoto"
+        }
+      },
+      "UpdateUserRequest": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Ben"
+          },
+          "city": {
+            "type": "string",
+            "description": "User's city",
+            "example": "Lviv"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone number",
+            "example": "(099)-999-99-99"
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "01.01.2023"
+          }
+        }
+      },
+      "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "User has been updated"
+          }
+        },
+        "example": { "message": "User has been updated" }
+      },
+      "PhotoRequest": {
+        "type": "object",
+        "properties": {
+          "photo": {
+            "type": "string",
+            "description": "User's photo",
+            "format": "binary"
+          }
+        }
+      },
+      "PhotoResponse": {
+        "type": "object",
+        "properties": {
+          "userPhotoURL": {
+            "type": "string",
+            "description": "User's email",
+            "example": "http://userphoto"
+          }
+        }
+      },
+      "GetNewsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Обережно, кліщі! Як уберегти улюбленця ",
+              "example": "Обережно, кліщі! Як уберегти улюбленця"
+            },
+            "url": {
+              "type": "string",
+              "description": "New's URL",
+              "example": "http://newswebsite.com/"
+            },
+            "description": {
+              "type": "string",
+              "description": "New's description",
+              "example": "Завдяки зусиллям столичних служб та волонтерів, у столиці запрацював тимчасовий притулок для тварин “Виставковий центр”, який діє на території 16 павільйону на ВДНГ. Притулок даватиме прихисток тваринам..."
+            },
+            "date": {
+              "type": "string",
+              "description": "New's date",
+              "example": "20/02/2021"
+            }
+          }
+        },
+        "example": [
+          { "title": "Обережно, кліщі! Як уберегти улюбленця ", "url": "http://newswebsite.com/", "description": "Травневі прогулянки з улюбленцем не лише приємні, але й потребують пильності. З початком теплої пори року активізуються кліщі, і треба бути уважним, щоб уберегти свого песика чи котика від дуже серйозних неприємностей зі здоров`ям.", "date": "20/02/2021"},
+          { "title": "В столиці запрацював тимчасовий притулок ", "url": "https://opensource.org/", "description": "Завдяки зусиллям столичних служб та волонтерів, у столиці запрацював тимчасовий притулок для тварин “Виставковий центр”, який діє на території 16 павільйону на ВДНГ. Притулок даватиме прихисток тваринам...", "date": "21/03/2022"}
+        ]
+      }
     },
     "securitySchemas": {
         "Bearer": {
