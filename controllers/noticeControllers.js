@@ -31,7 +31,7 @@ const getAll = async (req, res) => {
 
   const options =
     query === '' || !query
-      ? {}
+      ? {category}
       : {
           category,
           $or: [
