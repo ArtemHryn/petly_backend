@@ -25,9 +25,20 @@ const getAll = async (req, res) => {
   if (!category) {
     throw new ErrorConstructor(400, 'Please, select category');
   }
-  const options = query
-    ? { category, $text: { $search: query } }
-    : { category };
+  // const options = query
+  //   ? { category, $text: { $search: query } }
+  //   : { category };
+
+  const options =
+    query === '' || !query
+      ? {}
+      : {
+          category,
+          $or: [
+            { title: { $regex: query, $options: 'i' } },
+            { breed: { $regex: query, $options: 'i' } },
+          ],
+        };
 
   const skip = (page - 1) * limit;
 
