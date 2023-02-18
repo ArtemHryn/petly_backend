@@ -12,7 +12,10 @@
   "basePath": "/",
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:3000" }, { "url": "https://arcane-everglades-20653.herokuapp.com/" }],
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "https://arcane-everglades-20653.herokuapp.com/" }
+  ],
   "tags": [
     {
       "name": "Auth",
@@ -24,7 +27,7 @@
     },
     {
       "name": "Services-sidebar",
-      "description": "Contact information endpoint"
+      "description": "Our friends' information endpoint"
     },
     {
       "name": "Notices",
@@ -39,7 +42,7 @@
       "description": "User + Pets endpoints"
     }
   ],
- 
+
   "paths": {
     "users/signup": {
       "post": {
@@ -306,77 +309,60 @@
             "description": "Not found",
             "content": {}
           }
-        } 
         }
+      }
     },
-    "ourFriends": {
+    "sponsors": {
       "get": {
         "tags": ["Services-sidebar"],
-        "summary": "Get contact info",
+        "summary": "Get our friends' info",
 
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/SponsorsResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           }
         }
       }
     },
     "notices": {
-      "get": {
+      "post": {
         "tags": ["Notices"],
-        "summary": "Get all notices",
+        "summary": "Create a notice",
 
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          }
+        ],
         "security": [{ "Bearer": [] }],
 
         "requestBody": {
-          "description": "Reegistration's object",
+          "description": "Notice's object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
+                "$ref": "#/components/schemas/NoticeRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/NoticeImgRequest"
               }
             }
           }
@@ -387,30 +373,48 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/NoticeResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
+            "content": {}
+          }
+        }
+      }
+    },
+    "notices/owner": {
+      "get": {
+        "tags": ["Notices"],
+        "summary": "Get owner",
+
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/"
+                  "$ref": "#/components/schemas/NoticeOwnerResponse"
                 }
               }
             }
           },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+          "400": {
+            "description": "Bad request",
+            "content": {}
           }
         }
       }
@@ -429,364 +433,238 @@
             "description": "get one notice by id"
           }
         ],
-        "security": [{ "Bearer": [] }],
 
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/NoticeGetByIdResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
+            "content": { }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Notices"],
+        "summary": "Delete notice by id",
+
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          },
+          {
+            "in": "path",
+            "name": "noticeId",
+            "required": true,
+            "type": "string",
+            "description": "delete one notice by id"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/"
+                  "$ref": "#/components/schemas/NoticeDeleteByIdResponse"
                 }
               }
             }
           },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+          "400": {
+            "description": "Bad request",
+            "content": { }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
           }
         }
       }
     },
-    "notices/favorite": {
+    "notices/:category": {
+      "get": {
+        "tags": ["Notices"],
+        "summary": "Get all notices from the category or title",
+
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category",
+            "required": true,
+            "type": "string",
+            "description": "get all notices from the category"
+          },
+          {
+            "in": "query",
+            "name": "query",
+            "type": "string",
+            "description": "get all notices from query"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "type": "string",
+            "description": "get page from query"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "string",
+            "description": "get limit from query"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoticeGetAllResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": { }
+          }
+        }
+      }
+    },
+    "notices/favorites/all": {
       "patch": {
         "tags": ["Notices"],
-        "summary": "Get all notices",
+        "summary": "Get owner's favorite list",
 
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          }
+        ],
         "security": [{ "Bearer": [] }],
 
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/NoticeGetFavoriteListResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": { }
           }
         }
       }
     },
-    "notices/authId": {
-      "get": {
+    "notices/favorites/:noticeId": {
+      "patch": {
         "tags": ["Notices"],
-        "summary": "Get notices for authorized user",
+        "summary": "Add notice to favorites",
 
-        "parameters": [],
+        "parameters": [
+           {
+             "in": "header",
+             "name": "Authorization",
+             "required": true,
+             "type": "string",
+             "description": "The token issued to the current user"
+           },
+           {
+             "in": "path",
+             "name": "noticeId",
+             "required": true,
+             "type": "string",
+             "description": "notice id"
+           }
+        ],
         "security": [{ "Bearer": [] }],
 
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/NoticeAddToFavoritesResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "description": "Notice is already in favorites list",
+            "content": {}
           },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+          "404": {
+            "description": "Not found",
+            "content": {}
           }
         }
       },
-      "delete": {
+      "put": {
         "tags": ["Notices"],
-        "summary": "Delete notice for authorized user",
+        "summary": "Remove notice from favorites",
 
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          },
+          {
+            "in": "path",
+            "name": "noticeId",
+            "required": true,
+            "type": "string",
+            "description": "notice id"
+          }
+        ],
         "security": [{ "Bearer": [] }],
 
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/NoticeRemoveFromFavoritesResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
+            "content": { }
             }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "notices/category": {
-      "post": {
-        "tags": ["Notices"],
-        "summary": "Add notices to the category",
-
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "notices/auth": {
-      "get": {
-        "tags": ["Notices"],
-        "summary": "Get notice created by authorized user",
-
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": ["Notices"],
-        "summary": "Delete notice created by authorized user",
-
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          }
         }
       }
     },
@@ -1041,19 +919,19 @@
         }
       },
       "RegistrationResponse": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            },
-            "name": {
-              "type": "string",
-              "description": "User's name",
-              "example": "Mango"
-            }
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
           },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Mango"
+          }
+        },
         "example": [
           { "email": "user2@mail.com", "userId": "4gsdg654sf6f4fd" },
           { "email": "user2@mail.com", "userId": "6dfh6dh16dfh46h" }
@@ -1242,17 +1120,766 @@
           }
         },
         "example": [
-          { "title": "Обережно, кліщі! Як уберегти улюбленця ", "url": "http://newswebsite.com/", "description": "Травневі прогулянки з улюбленцем не лише приємні, але й потребують пильності. З початком теплої пори року активізуються кліщі, і треба бути уважним, щоб уберегти свого песика чи котика від дуже серйозних неприємностей зі здоров`ям.", "date": "20/02/2021"},
-          { "title": "В столиці запрацював тимчасовий притулок ", "url": "https://opensource.org/", "description": "Завдяки зусиллям столичних служб та волонтерів, у столиці запрацював тимчасовий притулок для тварин “Виставковий центр”, який діє на території 16 павільйону на ВДНГ. Притулок даватиме прихисток тваринам...", "date": "21/03/2022"}
+          {
+            "title": "Обережно, кліщі! Як уберегти улюбленця ",
+            "url": "http://newswebsite.com/",
+            "description": "Травневі прогулянки з улюбленцем не лише приємні, але й потребують пильності. З початком теплої пори року активізуються кліщі, і треба бути уважним, щоб уберегти свого песика чи котика від дуже серйозних неприємностей зі здоров`ям.",
+            "date": "20/02/2021"
+          },
+          {
+            "title": "В столиці запрацював тимчасовий притулок ",
+            "url": "https://opensource.org/",
+            "description": "Завдяки зусиллям столичних служб та волонтерів, у столиці запрацював тимчасовий притулок для тварин “Виставковий центр”, який діє на території 16 павільйону на ВДНГ. Притулок даватиме прихисток тваринам...",
+            "date": "21/03/2022"
+          }
         ]
+      },
+      "SponsorsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Sponsor's name",
+              "example": "Барбос"
+            },
+            "url": {
+              "type": "string",
+              "description": "Sponsor's URL",
+              "example": "https://www.facebook.com/NGO.Bar"
+            },
+            "addressUrl": {
+              "type": "string",
+              "description": "Sponsor's address URL",
+              "example": "https://www.facebook.com/NGO.Bar"
+            },
+            "imageUrl": {
+              "type": "string",
+              "description": "Sponsor's logo date",
+              "example": "https://www.facebook.com/photo/?fbid=156750233786595&set=a.156750217119930"
+            },
+            "address": {
+              "type": "string",
+              "description": "Sponsor's address",
+              "example": "Grigorenka Street, 25 "
+            },
+            "workDays": {
+              "type": "string",
+              "description": "Sponsor's schedule",
+              "example": "8:00- 20:00"
+            },
+            "phone": {
+              "type": "string",
+              "description": "New's description",
+              "example": "066 488 0480"
+            },
+            "email": {
+              "type": "string",
+              "description": "New's date",
+              "format": "email"
+            }
+          }
+        },
+        "example": [
+          {
+            "title": "Барбос",
+            "url": "https://www.facebook.com/NGO.Bar",
+            "addressUrl": "https://www.facebook.com/NGO.Bar",
+            "imageUrl": "https://www.facebook.com/photo/?fbid=156750233786595&set=a.156750217119930",
+            "address": "Grigorenka Street, 25 ",
+            "workDays": "8:00- 20:00",
+            "phone": "066 488 0480",
+            "email": "barbos@gmail.com"
+          },
+          {
+            "title": "Сіріус",
+            "url": "https://dogcat.com.ua/",
+            "addressUrl": "https://www.facebook.com/NGO.Bar",
+            "imageUrl": "https://www.facebook.com/photo/?fbid=156750233786595&set=a.156750217119930",
+            "address": "Fedorivka, Kyiv Oblast",
+            "workDays": "8:00- 20:00",
+            "phone": "068 488 0499",
+            "email": "dogcat.sirius@gmail.com"
+          }
+        ]
+      },
+      "NoticeRequest": {
+        "type": "object",
+        "required": ["title", "category"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Notice's title",
+            "example": "Сute dog is looking for a home"
+          },
+          "category": {
+            "type": "string",
+            "description": "'lost-found' or 'in-good-hands' or 'sell'",
+            "example": "in-good-hands"
+          },
+          "name": {
+            "type": "string",
+            "description": "Animal's name",
+            "example": "Polly"
+          },
+          "birthdate": {
+            "type": "string",
+            "description": "Animal's birthdate",
+            "example": "1980-01-01"
+          },
+          "breed": {
+            "type": "string",
+            "description": "Animal's breed",
+            "example": "shepherd dog"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Animal's sex",
+            "example": "'male' or 'female' or 'no info'"
+          },
+          "location": {
+            "type": "string",
+            "description": "Animal's location",
+            "example": "Lviv"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Comments",
+            "example": "Сute dog is looking for a home"
+          },
+          "price": {
+            "type": "number",
+            "description": "Animal's price",
+            "example": 100
+          },
+          "imgURL": {
+            "type": "string",
+            "description": "Animal's image",
+            "example": "http://animalPhoto/"
+          }
+        }
+      },
+      "NoticeImgRequest": {
+        "type": "object",
+        "properties": {
+          "imgURL": {
+            "type": "string",
+            "description": "Animal's photo",
+            "format": "binary"
+          }
+        }
+      },
+      "NoticeResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Notice's title",
+            "example": "Сute dog is looking for a home"
+          },
+          "category": {
+            "type": "string",
+            "description": "'lost-found' or 'in-good-hands' or 'sell'",
+            "example": "in-good-hands"
+          },
+          "name": {
+            "type": "string",
+            "description": "Animal's name",
+            "example": "Polly"
+          },
+          "birthdate": {
+            "type": "string",
+            "description": "Animal's birthdate",
+            "example": "1980-01-01"
+          },
+          "breed": {
+            "type": "string",
+            "description": "Animal's breed",
+            "example": "shepherd dog"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Animal's sex",
+            "example": "'male' or 'female' or 'no info'"
+          },
+          "location": {
+            "type": "string",
+            "description": "Animal's location",
+            "example": "Lviv"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Comments",
+            "example": "Сute dog is looking for a home"
+          },
+          "price": {
+            "type": "number",
+            "description": "Animal's price",
+            "example": 100
+          },
+          "imgURL": {
+            "type": "string",
+            "description": "Animal's image",
+            "example": "http://animalPhoto/"
+          }
+        },
+        "example": {
+          "title": "Сute dog is looking for a home",
+          "category": "in-good-hands",
+          "name": "Rex",
+          "birthdate": "1980-01-01",
+          "breed": "shepherd dog",
+          "sex": "'male' or 'female' or 'no info'",
+          "location": "Lviv",
+          "comments": "Сute dog is looking for a home",
+          "price": 100,
+          "imgURL": "http://animalPhoto/"
+        }
+      },
+      "NoticeOwnerResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Notice's title",
+              "example": "Сute dog is looking for a home"
+            },
+            "category": {
+              "type": "string",
+              "description": "'lost-found' or 'in-good-hands' or 'sell'",
+              "example": "in-good-hands"
+            },
+            "name": {
+              "type": "string",
+              "description": "Animal's name",
+              "example": "Polly"
+            },
+            "birthdate": {
+              "type": "string",
+              "description": "Animal's birthdate",
+              "example": "2020-01-01"
+            },
+            "breed": {
+              "type": "string",
+              "description": "Animal's breed",
+              "example": "shepherd dog"
+            },
+            "sex": {
+              "type": "string",
+              "description": "Animal's sex",
+              "example": "'male' or 'female' or 'no info'"
+            },
+            "location": {
+              "type": "string",
+              "description": "Animal's location",
+              "example": "Lviv"
+            },
+            "comments": {
+              "type": "string",
+              "description": "Comments",
+              "example": "Сute dog is looking for a home"
+            },
+            "price": {
+              "type": "number",
+              "description": "Animal's price",
+              "example": 100
+            },
+            "imgURL": {
+              "type": "string",
+              "description": "Animal's image",
+              "example": "http://animalPhoto/"
+            }
+          }
+        },
+        "example": [
+          {
+            "title": "Сute cat is looking for a home",
+            "category": "in-good-hands",
+            "name": "Alex",
+            "birthdate": "2020-01-01",
+            "breed": "lovely cat",
+            "sex": "'male' or 'female' or 'no info'",
+            "location": "Lviv",
+            "comments": "Сute cat is looking for a home",
+            "price": 100,
+            "imgURL": "http://animalPhoto/"
+          },
+          {
+            "title": "Сute dog is looking for a home",
+            "category": "in-good-hands",
+            "name": "Rex",
+            "birthdate": "2021-01-01",
+            "breed": "shepherd dog",
+            "sex": "'male' or 'female' or 'no info'",
+            "location": "Kyiv",
+            "comments": "Сute dog is looking for a home",
+            "price": 200,
+            "imgURL": "http://animalPhoto/"
+          }
+        ]
+      },
+      "NoticeGetByIdResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Notice's title",
+            "example": "Сute dog is looking for a home"
+          },
+          "category": {
+            "type": "string",
+            "description": "'lost-found' or 'in-good-hands' or 'sell'",
+            "example": "in-good-hands"
+          },
+          "name": {
+            "type": "string",
+            "description": "Animal's name",
+            "example": "Polly"
+          },
+          "birthdate": {
+            "type": "string",
+            "description": "Animal's birthdate",
+            "example": "1980-01-01"
+          },
+          "breed": {
+            "type": "string",
+            "description": "Animal's breed",
+            "example": "shepherd dog"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Animal's sex",
+            "example": "'male' or 'female' or 'no info'"
+          },
+          "location": {
+            "type": "string",
+            "description": "Animal's location",
+            "example": "Lviv"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Comments",
+            "example": "Сute dog is looking for a home"
+          },
+          "price": {
+            "type": "number",
+            "description": "Animal's price",
+            "example": 100
+          },
+          "imgURL": {
+            "type": "string",
+            "description": "Animal's image",
+            "example": "http://animalPhoto/"
+          }
+        },
+        "example": {
+          "title": "Сute dog is looking for a home",
+          "category": "in-good-hands",
+          "name": "Rex",
+          "birthdate": "1980-01-01",
+          "breed": "shepherd dog",
+          "sex": "'male' or 'female' or 'no info'",
+          "location": "Lviv",
+          "comments": "Сute dog is looking for a home",
+          "price": 100,
+          "imgURL": "http://animalPhoto/"
+        }
+      },
+      "NoticeDeleteByIdResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Notice has been deleted"
+          }
+        },
+        "example": { "message": "Notice has been deleted" }
+      },
+      "NoticeGetAllResponse": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "description": "Notice's total quantity",
+            "example": 2
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Notice's title",
+                  "example": "Сute dog is looking for a home"
+                },
+                "category": {
+                  "type": "string",
+                  "description": "'lost-found' or 'in-good-hands' or 'sell'",
+                  "example": "in-good-hands"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Animal's name",
+                  "example": "Polly"
+                },
+                "birthdate": {
+                  "type": "string",
+                  "description": "Animal's birthdate",
+                  "example": "2020-01-01"
+                },
+                "breed": {
+                  "type": "string",
+                  "description": "Animal's breed",
+                  "example": "shepherd dog"
+                },
+                "sex": {
+                  "type": "string",
+                  "description": "Animal's sex",
+                  "example": "'male' or 'female' or 'no info'"
+                },
+                "location": {
+                  "type": "string",
+                  "description": "Animal's location",
+                  "example": "Lviv"
+                },
+                "comments": {
+                  "type": "string",
+                  "description": "Comments",
+                  "example": "Сute dog is looking for a home"
+                },
+                "price": {
+                  "type": "number",
+                  "description": "Animal's price",
+                  "example": 100
+                },
+                "imgURL": {
+                  "type": "string",
+                  "description": "Animal's image",
+                  "example": "http://animalPhoto/"
+                }
+              }
+            }
+          }
+        },
+          "example": {
+            "total": 2,
+            "result": [
+              {
+                "title": "Сute cat is looking for a home",
+                "category": "in-good-hands",
+                "name": "Alex",
+                "birthdate": "2020-01-01",
+                "breed": "lovely cat",
+                "sex": "'male' or 'female' or 'no info'",
+                "location": "Lviv",
+                "comments": "Сute cat is looking for a home",
+                "price": 100,
+                "imgURL": "http://animalPhoto/"
+              },
+              {
+                "title": "Сute dog is looking for a home",
+                "category": "in-good-hands",
+                "name": "Rex",
+                "birthdate": "2021-01-01",
+                "breed": "shepherd dog",
+                "sex": "'male' or 'female' or 'no info'",
+                "location": "Kyiv",
+                "comments": "Сute dog is looking for a home",
+                "price": 200,
+                "imgURL": "http://animalPhoto/"
+              }
+            ]
+          }
+      },
+      "NoticeGetFavoriteListResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Notice's title",
+              "example": "Сute dog is looking for a home"
+            },
+            "category": {
+              "type": "string",
+              "description": "'lost-found' or 'in-good-hands' or 'sell'",
+              "example": "in-good-hands"
+            },
+            "name": {
+              "type": "string",
+              "description": "Animal's name",
+              "example": "Polly"
+            },
+            "birthdate": {
+              "type": "string",
+              "description": "Animal's birthdate",
+              "example": "2020-01-01"
+            },
+            "breed": {
+              "type": "string",
+              "description": "Animal's breed",
+              "example": "shepherd dog"
+            },
+            "sex": {
+              "type": "string",
+              "description": "Animal's sex",
+              "example": "'male' or 'female' or 'no info'"
+            },
+            "location": {
+              "type": "string",
+              "description": "Animal's location",
+              "example": "Lviv"
+            },
+            "comments": {
+              "type": "string",
+              "description": "Comments",
+              "example": "Сute dog is looking for a home"
+            },
+            "price": {
+              "type": "number",
+              "description": "Animal's price",
+              "example": 100
+            },
+            "imgURL": {
+              "type": "string",
+              "description": "Animal's image",
+              "example": "http://animalPhoto/"
+            }
+          }
+        },
+        "example": [
+          {
+            "title": "Сute cat is looking for a home",
+            "category": "in-good-hands",
+            "name": "Alex",
+            "birthdate": "2020-01-01",
+            "breed": "lovely cat",
+            "sex": "'male' or 'female' or 'no info'",
+            "location": "Lviv",
+            "comments": "Сute cat is looking for a home",
+            "price": 100,
+            "imgURL": "http://animalPhoto/"
+          },
+          {
+            "title": "Сute dog is looking for a home",
+            "category": "in-good-hands",
+            "name": "Rex",
+            "birthdate": "2021-01-01",
+            "breed": "shepherd dog",
+            "sex": "'male' or 'female' or 'no info'",
+            "location": "Kyiv",
+            "comments": "Сute dog is looking for a home",
+            "price": 200,
+            "imgURL": "http://animalPhoto/"
+          }
+        ]
+      },
+      "NoticeAddToFavoritesResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Notice was added to favorites list",
+            "example": "Notice was added to favorites list"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Notice's title",
+                  "example": "Сute dog is looking for a home"
+                },
+                "category": {
+                  "type": "string",
+                  "description": "'lost-found' or 'in-good-hands' or 'sell'",
+                  "example": "in-good-hands"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Animal's name",
+                  "example": "Polly"
+                },
+                "birthdate": {
+                  "type": "string",
+                  "description": "Animal's birthdate",
+                  "example": "2020-01-01"
+                },
+                "breed": {
+                  "type": "string",
+                  "description": "Animal's breed",
+                  "example": "shepherd dog"
+                },
+                "sex": {
+                  "type": "string",
+                  "description": "Animal's sex",
+                  "example": "'male' or 'female' or 'no info'"
+                },
+                "location": {
+                  "type": "string",
+                  "description": "Animal's location",
+                  "example": "Lviv"
+                },
+                "comments": {
+                  "type": "string",
+                  "description": "Comments",
+                  "example": "Сute dog is looking for a home"
+                },
+                "price": {
+                  "type": "number",
+                  "description": "Animal's price",
+                  "example": 100
+                },
+                "imgURL": {
+                  "type": "string",
+                  "description": "Animal's image",
+                  "example": "http://animalPhoto/"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "message": "Notice was added to favorites list",
+          "result": [
+            {
+              "title": "Сute cat is looking for a home",
+              "category": "in-good-hands",
+              "name": "Alex",
+              "birthdate": "2020-01-01",
+              "breed": "lovely cat",
+              "sex": "'male' or 'female' or 'no info'",
+              "location": "Lviv",
+              "comments": "Сute cat is looking for a home",
+              "price": 100,
+              "imgURL": "http://animalPhoto/"
+            },
+            {
+              "title": "Сute dog is looking for a home",
+              "category": "in-good-hands",
+              "name": "Rex",
+              "birthdate": "2021-01-01",
+              "breed": "shepherd dog",
+              "sex": "'male' or 'female' or 'no info'",
+              "location": "Kyiv",
+              "comments": "Сute dog is looking for a home",
+              "price": 200,
+              "imgURL": "http://animalPhoto/"
+            }
+          ]
+        }
+      },
+      "NoticeRemoveFromFavoritesResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Notice was removed to favorites list",
+            "example": "Notice was removed to favorites list"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Notice's title",
+                  "example": "Сute dog is looking for a home"
+                },
+                "category": {
+                  "type": "string",
+                  "description": "'lost-found' or 'in-good-hands' or 'sell'",
+                  "example": "in-good-hands"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Animal's name",
+                  "example": "Polly"
+                },
+                "birthdate": {
+                  "type": "string",
+                  "description": "Animal's birthdate",
+                  "example": "2020-01-01"
+                },
+                "breed": {
+                  "type": "string",
+                  "description": "Animal's breed",
+                  "example": "shepherd dog"
+                },
+                "sex": {
+                  "type": "string",
+                  "description": "Animal's sex",
+                  "example": "'male' or 'female' or 'no info'"
+                },
+                "location": {
+                  "type": "string",
+                  "description": "Animal's location",
+                  "example": "Lviv"
+                },
+                "comments": {
+                  "type": "string",
+                  "description": "Comments",
+                  "example": "Сute dog is looking for a home"
+                },
+                "price": {
+                  "type": "number",
+                  "description": "Animal's price",
+                  "example": 100
+                },
+                "imgURL": {
+                  "type": "string",
+                  "description": "Animal's image",
+                  "example": "http://animalPhoto/"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "message": "Notice was removed to favorites list",
+          "result": [
+            {
+              "title": "Сute cat is looking for a home",
+              "category": "in-good-hands",
+              "name": "Alex",
+              "birthdate": "2020-01-01",
+              "breed": "lovely cat",
+              "sex": "'male' or 'female' or 'no info'",
+              "location": "Lviv",
+              "comments": "Сute cat is looking for a home",
+              "price": 100,
+              "imgURL": "http://animalPhoto/"
+            },
+            {
+              "title": "Сute dog is looking for a home",
+              "category": "in-good-hands",
+              "name": "Rex",
+              "birthdate": "2021-01-01",
+              "breed": "shepherd dog",
+              "sex": "'male' or 'female' or 'no info'",
+              "location": "Kyiv",
+              "comments": "Сute dog is looking for a home",
+              "price": 200,
+              "imgURL": "http://animalPhoto/"
+            }
+          ]
+        }
       }
     },
     "securitySchemas": {
-        "Bearer": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT"
-        }
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   }
 }
