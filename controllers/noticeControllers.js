@@ -146,7 +146,7 @@ const getOwnerFavorites = async (req, res) => {
 
   const ownerFavorites = await User.findById(userId).populate(
     'favorites',
-    'title name birthdate breed location comments categoryName price photo sex owner'
+    'title category birthdate breed location sex imgURL owner'
   );
   const { favorites } = ownerFavorites;
 
