@@ -7,13 +7,17 @@ const router = express.Router();
 
 const { noticeValidation } = require('../../middlewares/validation');
 
-router.post('/', [checkJWT, uploadCloud.single('noticeAvatar'), noticeValidation], asyncWrapper(controller.add));
+router.post(
+  '/',
+  [checkJWT, uploadCloud.single('noticeAvatar'), noticeValidation],
+  asyncWrapper(controller.addNotice)
+);
 
-router.get('/owner', checkJWT, controller.getOwner);
+router.get('/owner', checkJWT, controller.getOwnerNotices);
 
-router.get('/:noticeId', asyncWrapper(controller.getOne));
+router.get('/notice/:noticeId', asyncWrapper(controller.getOneNotice));
 
-router.get('/notice/:category', asyncWrapper(controller.getAll));
+router.get('/:category', asyncWrapper(controller.getAllNotices));
 
 router.delete(
   '/:noticeId',
@@ -24,7 +28,7 @@ router.delete(
 router.patch(
   '/favorites/:noticeId',
   checkJWT,
-  asyncWrapper(controller.addOwnerFavorites)
+  asyncWrapper(controller.addOwnerFavorit)
 );
 
 router.get(
@@ -36,7 +40,7 @@ router.get(
 router.put(
   '/favorites/:noticeId',
   checkJWT,
-  asyncWrapper(controller.removeOwnerFavorites)
+  asyncWrapper(controller.removeOwnerFavorit)
 );
 
 module.exports = router;

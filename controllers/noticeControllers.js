@@ -3,7 +3,7 @@ const { User } = require('../models/userModel');
 const { ErrorConstructor } = require('../helper/errors');
 
 // create users notice
-const add = async (req, res) => {
+const addNotice = async (req, res) => {
   const { _id } = req.user;
   const { email, phone } = await User.findById(_id);
 
@@ -19,7 +19,7 @@ const add = async (req, res) => {
 
 // get all noties from category or title
 
-const getAll = async (req, res) => {
+const getAllNotices = async (req, res) => {
   const { category } = req.params;
   const { page = 1, limit = 8, query } = req.query;
   if (!category) {
@@ -58,7 +58,7 @@ const getAll = async (req, res) => {
 };
 
 // get one notice
-const getOne = async (req, res) => {
+const getOneNotice = async (req, res) => {
   const { noticeId } = req.params;
   const result = await Notice.findById(noticeId);
   if (!result) {
@@ -70,7 +70,7 @@ const getOne = async (req, res) => {
 };
 
 // getOwnerNotice
-const getOwner = async (req, res) => {
+const getOwnerNotices = async (req, res) => {
   const { _id: userId } = req.user;
   const notices = await Notice.find({ owner: userId }, '-createdAt -updatedAt');
   res.json({
@@ -95,7 +95,7 @@ const deleteOwnerNotice = async (req, res) => {
 
 // Add favorite
 
-const addOwnerFavorites = async (req, res) => {
+const addOwnerFavorit = async (req, res) => {
   const { _id: userId } = req.user;
   const { noticeId: id } = req.params;
 
@@ -121,7 +121,7 @@ const addOwnerFavorites = async (req, res) => {
 
 // remove owner favorites notice
 
-const removeOwnerFavorites = async (req, res) => {
+const removeOwnerFavorit = async (req, res) => {
   const { _id: userId } = req.user;
   const { noticeId: id } = req.params;
   const result = await Notice.findById(id);
@@ -146,7 +146,7 @@ const getOwnerFavorites = async (req, res) => {
 
   const ownerFavorites = await User.findById(userId).populate(
     'favorites',
-    'title name birthdate breed location comments categoryName price photo sex owner'
+    'title category birthdate breed location sex imgURL owner'
   );
   const { favorites } = ownerFavorites;
 
@@ -154,12 +154,12 @@ const getOwnerFavorites = async (req, res) => {
 };
 
 module.exports = {
-  getAll,
-  add,
-  getOne,
-  getOwner,
+  getAllNotices,
+  addNotice,
+  getOneNotice,
+  getOwnerNotices,
   deleteOwnerNotice,
-  addOwnerFavorites,
-  removeOwnerFavorites,
+  addOwnerFavorit,
+  removeOwnerFavorit,
   getOwnerFavorites,
 };
