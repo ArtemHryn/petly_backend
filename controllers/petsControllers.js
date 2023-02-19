@@ -18,7 +18,7 @@ const deletePetById = async (req, res) => {
   if (!result) {
     throw ErrorConstructor(404, 'Not found');
   }
-  res.status(200).json({ message: 'Pet deleted' });
+  res.status(200).json({ message: 'Pet was deleted' });
 };
 
 const getAllPets = async (req, res) => {
