@@ -447,7 +447,7 @@
           },
           "400": {
             "description": "Bad request",
-            "content": { }
+            "content": {}
           },
           "404": {
             "description": "Not found",
@@ -490,7 +490,7 @@
           },
           "400": {
             "description": "Bad request",
-            "content": { }
+            "content": {}
           },
           "404": {
             "description": "Not found",
@@ -545,7 +545,7 @@
           },
           "400": {
             "description": "Bad request",
-            "content": { }
+            "content": {}
           }
         }
       }
@@ -579,7 +579,7 @@
           },
           "400": {
             "description": "Bad request",
-            "content": { }
+            "content": {}
           }
         }
       }
@@ -590,20 +590,20 @@
         "summary": "Add notice to favorites",
 
         "parameters": [
-           {
-             "in": "header",
-             "name": "Authorization",
-             "required": true,
-             "type": "string",
-             "description": "The token issued to the current user"
-           },
-           {
-             "in": "path",
-             "name": "noticeId",
-             "required": true,
-             "type": "string",
-             "description": "notice id"
-           }
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          },
+          {
+            "in": "path",
+            "name": "noticeId",
+            "required": true,
+            "type": "string",
+            "description": "notice id"
+          }
         ],
         "security": [{ "Bearer": [] }],
 
@@ -663,8 +663,8 @@
           },
           "400": {
             "description": "Bad request",
-            "content": { }
-            }
+            "content": {}
+          }
         }
       }
     },
@@ -673,16 +673,29 @@
         "tags": ["Pets"],
         "summary": "Add pet",
 
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          }
+        ],
         "security": [{ "Bearer": [] }],
 
         "requestBody": {
-          "description": "Reegistration's object",
+          "description": "Pet's object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
+                "$ref": "#/components/schemas/PetAddRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PetAddPhotoRequest"
               }
             }
           }
@@ -693,81 +706,87 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/PetAddResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
+            "content": {}
+          }
+        }
+      },
+      "get": {
+        "tags": ["Pets"],
+        "summary": "Get all pets",
+
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/"
+                  "$ref": "#/components/schemas/PetsGetAllResponse"
                 }
               }
             }
           },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+          "400": {
+            "description": "Bad request",
+            "content": {}
           }
         }
-      },
+      }
+    },
+    "pets/:myPetId": {
       "delete": {
         "tags": ["Pets"],
         "summary": "Delete pet",
 
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "description": "The token issued to the current user"
+          },
+          {
+            "in": "path",
+            "name": "myPetId",
+            "required": true,
+            "type": "string",
+            "description": "pet id"
+          }
+        ],
         "security": [{ "Bearer": [] }],
 
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
+                  "$ref": "#/components/schemas/PetDeleteResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
+            "content": {}
           }
         }
       }
@@ -1258,6 +1277,18 @@
             "description": "Animal's image",
             "example": "http://animalPhoto/"
           }
+        },
+        "example": {
+          "title": "Сute dog is looking for a home",
+          "category": "in-good-hands",
+          "name": "Rex",
+          "birthdate": "1980-01-01",
+          "breed": "shepherd dog",
+          "sex": "'male' or 'female' or 'no info'",
+          "location": "Lviv",
+          "comments": "Сute dog is looking for a home",
+          "price": 100,
+          "imgURL": "http://animalPhoto/"
         }
       },
       "NoticeImgRequest": {
@@ -1872,6 +1903,169 @@
             }
           ]
         }
+      },
+      "PetAddRequest": {
+        "type": "object",
+        "required": ["name", "breed", "owner"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Pet's name",
+            "example": "Alex"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date",
+            "example": "22.02.2023"
+          },
+          "breed": {
+            "type": "string",
+            "description": "Pet's breed",
+            "example": "shepherd dog"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "Avatar URL",
+            "example": "http://petPhoto/"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Comments",
+            "example": "The cutest dog!"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Animal's owner id",
+            "example": "d6g5h6hdf5f6d6f"
+          }
+        },
+        "example": {
+          "name":  "Alex",
+          "date": "22.02.2023",
+          "breed": "shepherd dog",
+          "avatarURL": "http://petPhoto/",
+          "comments": "The cutest dog!",
+          "owner": "d6g5h6hdf5f6d6f"
+        }
+      },
+      "PetAddPhotoRequest": {
+        "type": "object",
+        "properties": {
+          "imgURL": {
+            "type": "string",
+            "description": "Pet's photo",
+            "format": "binary"
+          }
+        }
+      },
+      "PetAddResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Pet's name",
+            "example": "Alex"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date",
+            "example": "22.02.2023"
+          },
+          "breed": {
+            "type": "string",
+            "description": "Pet's breed",
+            "example": "shepherd dog"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "Avatar URL",
+            "example": "http://petPhoto/"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Comments",
+            "example": "The cutest dog!"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Animal's owner id",
+            "example": "d6g5h6hdf5f6d6f"
+          }
+        },
+        "example": {
+          "name": "Alex",
+          "date": "22.02.2023",
+          "breed": "shepherd dog",
+          "avatarURL": "http://petPhoto/",
+          "comments": "The cutest dog!",
+          "owner": "d6g5h6hdf5f6d6f"
+        }
+      },
+      "PetsGetAllResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Pet's name",
+              "example": "Alex"
+            },
+            "date": {
+              "type": "string",
+              "description": "Date",
+              "example": "22.02.2023"
+            },
+            "breed": {
+              "type": "string",
+              "description": "Pet's breed",
+              "example": "shepherd dog"
+            },
+            "avatarURL": {
+              "type": "string",
+              "description": "Avatar URL",
+              "example": "http://petPhoto/"
+            },
+            "comments": {
+              "type": "string",
+              "description": "Comments",
+              "example": "The cutest dog!"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Animal's owner id",
+              "example": "d6g5h6hdf5f6d6f"
+            }
+          }
+        },
+        "example": [
+          {
+            "name": "Alex",
+            "date": "22.02.2021",
+            "breed": "shepherd dog",
+            "avatarURL": "http://petPhoto/",
+            "comments": "The cutest dog!",
+            "owner": "d6g5h6hdf5f6d6f4g"
+          },
+          {
+            "name": "Mango",
+            "date": "23.09.2023",
+            "breed": "lucky cat",
+            "avatarURL": "http://petPhoto/",
+            "comments": "The cutest kitten!",
+            "owner": "d6g5h6hdf5f6d6jhlf"
+          }
+        ]
+      },
+      "PetDeleteResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Pet was deleted"
+          }
+        },
+        "example": { "message": "Pet was deleted" }
       }
     },
     "securitySchemas": {
