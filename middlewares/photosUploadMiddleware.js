@@ -21,7 +21,7 @@ const storage = new CloudinaryStorage({
       }
       return 'petsPhoto';
     },
-    transformation: [{ width: 250 }],
+    transformation: [{ width: 750 }],
   },
   allowedFormats: ['jpg', 'png'],
 
