@@ -31,6 +31,7 @@ const noticeSchema = new Schema(
       type: Number,
       min: [1, 'Min price 1'],
       max: [1000000, 'Max price 1000000,'],
+      default: null,
     },
     imgURL: { type: String },
     owner: { type: Schema.Types.ObjectId, ref: 'user', required: true },

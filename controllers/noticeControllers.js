@@ -57,27 +57,65 @@ const getAllNotices = async (req, res) => {
   res.json({ total: allNotice.length, result: result });
 };
 
+
 // get one notice
-const getOneNotice = async (req, res) => {
-  const { noticeId } = req.params;
-  const result = await Notice.findById(noticeId);
-  if (!result) {
-    throw new ErrorConstructor(404, `Notice with id : ${noticeId} not found`);
+// const getOneNotice = async (req, res) => {
+//   const { noticeId } = req.params;
+//   const result = await Notice.findById(noticeId);
+//   if (!result) {
+//     throw new ErrorConstructor(404, `Notice with id : ${noticeId} not found`);
+//   }
+//   res.status(200).json({
+//     result,
+//   });
+// };
+
+// get owner id info
+const getOwnerInfo = async (req, res) => {
+  const { ownerId } = req.params;
+  const { phone, email } = await User.findById(ownerId);
+  if (!ownerId) {
+    throw new ErrorConstructor(404, `Owner with id : ${ownerId} not found`);
   }
   res.status(200).json({
-    result,
+    email,
+    phone
   });
 };
+
+
+
+
+// get one notice
+// const getOneNotice = async (req, res) => {
+//   const { noticeId } = req.params;
+//   const result = await Notice.findById(
+//     noticeId
+//   ).populate('owner', 'email phone');
+
+//   if (!result) {
+//    throw new ErrorConstructor(404, `Notice with id : ${noticeId} not found`);
+//   }
+//   res.status(200).json({
+//     result,
+//   });
+// };
 
 // getOwnerNotice
 const getOwnerNotices = async (req, res) => {
   const { _id: userId } = req.user;
-  const notices = await Notice.find({ owner: userId }, '-createdAt -updatedAt');
-  res.json({
+  const sorting = [['createdAt', 1]];
+  
+  const notices = await Notice.find({ owner: userId }).sort(sorting);
+    if (!notices) {
+      throw new ErrorConstructor(404, 'Not Found');
+    }
+  res.status(200).json({
     notices,
   });
 };
 
+// delete owner notice
 const deleteOwnerNotice = async (req, res) => {
   const { _id: userId } = req.user;
   const { noticeId } = req.params;
@@ -156,7 +194,8 @@ const getOwnerFavorites = async (req, res) => {
 module.exports = {
   getAllNotices,
   addNotice,
-  getOneNotice,
+  getOwnerInfo,
+  // getOneNotice,
   getOwnerNotices,
   deleteOwnerNotice,
   addOwnerFavorit,
