@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
 require("dotenv").config();
-const { checkCredentials } = require("../helper/checkCredentials");
+
 const { ErrorConstructor } = require("../helper/errors");
 const { User } = require("../models/userModel");
 
@@ -20,8 +21,13 @@ const registerUser = async (body) => {
 
 const loginUser = async ({ email, password }) => {
   const candidate = await User.findOne({ email });
-  checkCredentials(candidate, password);
 
+  const isCorrectCredentials =
+    !candidate || !(await bcrypt.compare(password, candidate.password));
+  if (isCorrectCredentials) {
+    throw new ErrorConstructor(401, 'Email or password is wrong');
+  }
+  
   const token = jwt.sign(
     { _id: candidate._id, email: candidate.email },
     process.env.JWT_SECRET_KEY,
