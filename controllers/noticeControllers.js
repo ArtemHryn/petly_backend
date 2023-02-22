@@ -44,7 +44,7 @@ const getAllNotices = async (req, res) => {
 
   const allNotice = await Notice.find(options);
 
-  const sorting = [['createdAt', 1]];
+  const sorting = [['createdAt', -1]];
 
   const result = await Notice.find(options)
     .sort(sorting)
@@ -104,7 +104,7 @@ const getOwnerInfo = async (req, res) => {
 // getOwnerNotice
 const getOwnerNotices = async (req, res) => {
   const { _id: userId } = req.user;
-  const sorting = [['createdAt', 1]];
+  const sorting = [['createdAt', -1]];
   
   const notices = await Notice.find({ owner: userId }).sort(sorting);
     if (!notices) {
@@ -181,8 +181,9 @@ const removeOwnerFavorit = async (req, res) => {
 // get owner favorites list
 const getOwnerFavorites = async (req, res) => {
   const { _id: userId } = req.user;
+  const sorting = [['createdAt', -1]];
 
-  const ownerFavorites = await User.findById(userId).populate(
+  const ownerFavorites = await User.findById(userId).sort(sorting).populate(
     'favorites',
     'title category birthdate breed location sex imgURL owner'
   );
