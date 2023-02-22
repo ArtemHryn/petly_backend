@@ -36,10 +36,6 @@
     {
       "name": "Pets",
       "description": "Pets endpoints"
-    },
-    {
-      "name": "User + Pets",
-      "description": "User + Pets endpoints"
     }
   ],
 
@@ -419,18 +415,18 @@
         }
       }
     },
-    "notices/:noticeId": {
+    "notices/notice/:ownerId": {
       "get": {
         "tags": ["Notices"],
-        "summary": "Get notice by id",
+        "summary": "Get user info from notice",
 
         "parameters": [
           {
             "in": "path",
-            "name": "noticeId",
+            "name": "ownerId",
             "required": true,
             "type": "string",
-            "description": "get one notice by id"
+            "description": "Get user info from notice"
           }
         ],
 
@@ -440,7 +436,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NoticeGetByIdResponse"
+                  "$ref": "#/components/schemas/NoticeGetByOwnerIdResponse"
                 }
               }
             }
@@ -454,7 +450,9 @@
             "content": {}
           }
         }
-      },
+      }
+    },
+    "notices/:noticeId": {
       "delete": {
         "tags": ["Notices"],
         "summary": "Delete notice by id",
@@ -790,112 +788,6 @@
           }
         }
       }
-    },
-    "userPets": {
-      "get": {
-        "tags": ["User + Pets"],
-        "summary": "Get user info",
-
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "petsUser": {
-      "get": {
-        "tags": ["User + Pets"],
-        "summary": "Get pet info",
-
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-
-        "requestBody": {
-          "description": "Reegistration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReegistrationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReegistrationResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
 
@@ -1094,7 +986,7 @@
       "PhotoRequest": {
         "type": "object",
         "properties": {
-          "photo": {
+          "userPhoto": {
             "type": "string",
             "description": "User's photo",
             "format": "binary"
@@ -1272,7 +1164,7 @@
             "description": "Animal's price",
             "example": 100
           },
-          "imgURL": {
+          "noticeAvatar": {
             "type": "string",
             "description": "Animal's image",
             "example": "http://animalPhoto/"
@@ -1294,7 +1186,7 @@
       "NoticeImgRequest": {
         "type": "object",
         "properties": {
-          "imgURL": {
+          "noticeAvatar": {
             "type": "string",
             "description": "Animal's photo",
             "format": "binary"
@@ -1452,58 +1344,18 @@
           }
         ]
       },
-      "NoticeGetByIdResponse": {
+      "NoticeGetByOwnerIdResponse": {
         "type": "object",
         "properties": {
-          "title": {
+          "email": {
             "type": "string",
-            "description": "Notice's title",
-            "example": "Сute dog is looking for a home"
+            "description": "User's email",
+            "format": "email"
           },
-          "category": {
+          "phone": {
             "type": "string",
-            "description": "'lost-found' or 'in-good-hands' or 'sell'",
-            "example": "in-good-hands"
-          },
-          "name": {
-            "type": "string",
-            "description": "Animal's name",
-            "example": "Polly"
-          },
-          "birthdate": {
-            "type": "string",
-            "description": "Animal's birthdate",
-            "example": "1980-01-01"
-          },
-          "breed": {
-            "type": "string",
-            "description": "Animal's breed",
-            "example": "shepherd dog"
-          },
-          "sex": {
-            "type": "string",
-            "description": "Animal's sex",
-            "example": "'male' or 'female' or 'no info'"
-          },
-          "location": {
-            "type": "string",
-            "description": "Animal's location",
-            "example": "Lviv"
-          },
-          "comments": {
-            "type": "string",
-            "description": "Comments",
-            "example": "Сute dog is looking for a home"
-          },
-          "price": {
-            "type": "number",
-            "description": "Animal's price",
-            "example": 100
-          },
-          "imgURL": {
-            "type": "string",
-            "description": "Animal's image",
-            "example": "http://animalPhoto/"
+            "description": "User's phone number",
+            "example": "(099)-999-99-99"
           }
         },
         "example": {
@@ -1596,35 +1448,35 @@
             }
           }
         },
-          "example": {
-            "total": 2,
-            "result": [
-              {
-                "title": "Сute cat is looking for a home",
-                "category": "in-good-hands",
-                "name": "Alex",
-                "birthdate": "2020-01-01",
-                "breed": "lovely cat",
-                "sex": "'male' or 'female' or 'no info'",
-                "location": "Lviv",
-                "comments": "Сute cat is looking for a home",
-                "price": 100,
-                "imgURL": "http://animalPhoto/"
-              },
-              {
-                "title": "Сute dog is looking for a home",
-                "category": "in-good-hands",
-                "name": "Rex",
-                "birthdate": "2021-01-01",
-                "breed": "shepherd dog",
-                "sex": "'male' or 'female' or 'no info'",
-                "location": "Kyiv",
-                "comments": "Сute dog is looking for a home",
-                "price": 200,
-                "imgURL": "http://animalPhoto/"
-              }
-            ]
-          }
+        "example": {
+          "total": 2,
+          "result": [
+            {
+              "title": "Сute cat is looking for a home",
+              "category": "in-good-hands",
+              "name": "Alex",
+              "birthdate": "2020-01-01",
+              "breed": "lovely cat",
+              "sex": "'male' or 'female' or 'no info'",
+              "location": "Lviv",
+              "comments": "Сute cat is looking for a home",
+              "price": 100,
+              "imgURL": "http://animalPhoto/"
+            },
+            {
+              "title": "Сute dog is looking for a home",
+              "category": "in-good-hands",
+              "name": "Rex",
+              "birthdate": "2021-01-01",
+              "breed": "shepherd dog",
+              "sex": "'male' or 'female' or 'no info'",
+              "location": "Kyiv",
+              "comments": "Сute dog is looking for a home",
+              "price": 200,
+              "imgURL": "http://animalPhoto/"
+            }
+          ]
+        }
       },
       "NoticeGetFavoriteListResponse": {
         "type": "array",
@@ -1940,7 +1792,7 @@
           }
         },
         "example": {
-          "name":  "Alex",
+          "name": "Alex",
           "date": "22.02.2023",
           "breed": "shepherd dog",
           "avatarURL": "http://petPhoto/",
@@ -1951,7 +1803,7 @@
       "PetAddPhotoRequest": {
         "type": "object",
         "properties": {
-          "imgURL": {
+          "petPhoto": {
             "type": "string",
             "description": "Pet's photo",
             "format": "binary"
