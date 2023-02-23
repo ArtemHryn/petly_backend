@@ -36,7 +36,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'notice', }],
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'notice' }],
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
+    },
   },
   { timestamps: true, versionKey: false }
 );

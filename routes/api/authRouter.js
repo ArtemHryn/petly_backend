@@ -7,6 +7,7 @@ const checkJWT = require("../../middlewares/authTokenCheck");
 const {
   registrationValidation,
   loginValidation,
+  resendVerificationValidation,
 } = require("../../middlewares/validation");
 
 const {
@@ -16,6 +17,8 @@ const {
   currentController,
   updateUserController,
   updatePhotoController,
+  verificationController,
+  resendVerificationController,
 } = require("../../controllers/authControllers");
 const uploadCloud = require("../../middlewares/photosUploadMiddleware");
 
@@ -35,6 +38,14 @@ router.patch(
   '/photo',
   [checkJWT, uploadCloud.single('userPhoto')],
   asyncWrapper(updatePhotoController)
+);
+
+router.get('/verify/:verificationToken', asyncWrapper(verificationController));
+
+router.post(
+  '/verify',
+  resendVerificationValidation,
+  asyncWrapper(resendVerificationController)
 );
 
 module.exports = router;
