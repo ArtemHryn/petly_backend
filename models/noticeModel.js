@@ -13,7 +13,7 @@ const noticeSchema = new Schema(
       type: Date,
       min: '1980-01-01',
       max: Date.now(),
-      default: 'no info',
+      default: '00/00/0000',
     },
     breed: { type: String, minlength: 0, maxlength: 24, default: 'no info' },
     sex: {
