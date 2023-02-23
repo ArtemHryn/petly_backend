@@ -6,7 +6,9 @@ const { ErrorConstructor } = require('../helper/errors');
 const addNotice = async (req, res) => {
   const { _id } = req.user;
   const { email, phone } = await User.findById(_id);
-
+  if (req.body.birthdate) {
+    req.body.birthdate = '00/00/0000';
+  }
   const pet = new Notice({
     ...req.body,
     imgURL: req.file.path,
@@ -31,7 +33,7 @@ const getAllNotices = async (req, res) => {
 
   const options =
     query === '' || !query
-      ? {category}
+      ? { category }
       : {
           category,
           $or: [
@@ -57,7 +59,6 @@ const getAllNotices = async (req, res) => {
   res.json({ total: allNotice.length, result: result });
 };
 
-
 // get one notice
 // const getOneNotice = async (req, res) => {
 //   const { noticeId } = req.params;
@@ -79,12 +80,9 @@ const getOwnerInfo = async (req, res) => {
   }
   res.status(200).json({
     email,
-    phone
+    phone,
   });
 };
-
-
-
 
 // get one notice
 // const getOneNotice = async (req, res) => {
@@ -105,11 +103,11 @@ const getOwnerInfo = async (req, res) => {
 const getOwnerNotices = async (req, res) => {
   const { _id: userId } = req.user;
   const sorting = [['createdAt', -1]];
-  
+
   const notices = await Notice.find({ owner: userId }).sort(sorting);
-    if (!notices) {
-      throw new ErrorConstructor(404, 'Not Found');
-    }
+  if (!notices) {
+    throw new ErrorConstructor(404, 'Not Found');
+  }
   res.status(200).json({
     notices,
   });
@@ -183,10 +181,12 @@ const getOwnerFavorites = async (req, res) => {
   const { _id: userId } = req.user;
   const sorting = [['createdAt', -1]];
 
-  const ownerFavorites = await User.findById(userId).sort(sorting).populate(
-    'favorites',
-    'title category birthdate breed location sex imgURL owner'
-  );
+  const ownerFavorites = await User.findById(userId)
+    .sort(sorting)
+    .populate(
+      'favorites',
+      'title category birthdate breed location sex imgURL owner'
+    );
   const { favorites } = ownerFavorites;
 
   return res.status(200).json({ favorites });

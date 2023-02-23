@@ -2,6 +2,8 @@ const RegisterUserSchema = require("../utils/validation/authValidation/registerV
 const LoginUserSchema = require("../utils/validation/authValidation/loginValidationSchema");
 const NoticeValidationSchema = require("../utils/validation/noticeValidation/noticeValidationShema");
 const addPetSchema = require("../utils/validation/petsValidation/addPetJoiSchema");
+const { ErrorConstructor } = require("../helper/errors");
+const { resendVerificationValidationSchema } = require("../utils/validation/authValidation/resendVerificationValidationSchema");
 
 
 const registrationValidation = (req, res, next) => {
@@ -37,11 +39,21 @@ const addPetValidation = (req, res, next) => {
   next();
 };
 
+const resendVerificationValidation = (req, res, next) => {
+  const validationResult = resendVerificationValidationSchema.validate(
+    req.body
+  );
+  if (validationResult.error) {
+    next(new ErrorConstructor(400, 'missing required field email'));
+  }
+  next();
+};
 
 module.exports = {
   registrationValidation,
   loginValidation,
   noticeValidation,
   addPetValidation,
+  resendVerificationValidation,
 };
 
