@@ -54,11 +54,15 @@ const current = async _id => {
 const updateUser = async (_id, body) => {
   // you can update password also
   const user = await User.findById(_id);
-  if (body.birthday) {
-    const parsedDate = new Date(Date.parse(body.birthday));
-    body.birthday = format(new Date(parsedDate), 'yyyy-MM-dd');
+  try {
+    if (body.birthday) {
+      const parsedDate = new Date(Date.parse(body.birthday));
+      body.birthday = format(new Date(parsedDate), 'yyyy-MM-dd');
+    }
+  } catch (error) {
+    const newDate = new Date('01-02-2000')
+    body.birthday = newDate.toUTCString() ;
   }
-  console.log(body.birthday);
 
   Object.assign(user, body);
   user.save();
