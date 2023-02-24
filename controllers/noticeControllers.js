@@ -6,8 +6,14 @@ const { ErrorConstructor } = require('../helper/errors');
 const addNotice = async (req, res) => {
   const { _id } = req.user;
   const { email, phone } = await User.findById(_id);
-  if (req.body.birthdate) {
-    req.body.birthdate = '00/00/0000';
+  try {
+    if (req.body.birthdate) {
+      const parsedDate = new Date(Date.parse(req.body.birthdate));
+      req.body.birthdate = format(new Date(parsedDate), 'yyyy-MM-dd');
+    }
+  } catch (error) {
+    const newDate = new Date('01-02-2000');
+    req.body.birthdate = newDate.toUTCString();
   }
   const pet = new Notice({
     ...req.body,
