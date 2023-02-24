@@ -4,17 +4,24 @@ const { asyncWrapper } = require('../../helper/apiHelper');
 const router = express.Router();
 const checkJWT = require('../../middlewares/authTokenCheck');
 
-const { addPet, deletePetById, getAllPets } = require('../../controllers/petsControllers');
+const {
+  // addPet,
+  // deletePetById,
+  // getAllPets,
+  deletePetController,
+  getAllPetsController,
+  addPetController,
+} = require('../../controllers/petsControllers');
 const { addPetValidation } = require('../../middlewares/validation');
 const uploadCloud = require('../../middlewares/photosUploadMiddleware');
 
 router.post(
   '/',
   [checkJWT, uploadCloud.single('petPhoto'), addPetValidation],
-  asyncWrapper(addPet)
+  asyncWrapper(addPetController)
 );
 
-router.delete('/:myPetId', checkJWT, asyncWrapper(deletePetById));
-router.get('/', checkJWT, asyncWrapper(getAllPets));
+router.delete('/:myPetId', checkJWT, asyncWrapper(deletePetController));
+router.get('/', checkJWT, asyncWrapper(getAllPetsController));
 
 module.exports = router;
