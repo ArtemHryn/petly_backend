@@ -34,9 +34,7 @@ const getAllNotices = async (req, res) => {
   if (!category) {
     throw new ErrorConstructor(400, 'Please, select category');
   }
-  // const options = query
-  //   ? { category, $text: { $search: query } }
-  //   : { category };
+
 
   const options =
     query === '' || !query
@@ -51,7 +49,7 @@ const getAllNotices = async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  const allNotice = await Notice.find(options);
+  const allNotice = await Notice.countDocuments(options)
 
   const sorting = [['createdAt', -1]];
 
@@ -63,20 +61,9 @@ const getAllNotices = async (req, res) => {
   if (!result) {
     throw new ErrorConstructor(404, 'Not found');
   }
-  res.json({ total: allNotice.length, result: result });
+  res.json({ totalPages: Math.ceil(allNotice / 8), page, result: result });
 };
 
-// get one notice
-// const getOneNotice = async (req, res) => {
-//   const { noticeId } = req.params;
-//   const result = await Notice.findById(noticeId);
-//   if (!result) {
-//     throw new ErrorConstructor(404, `Notice with id : ${noticeId} not found`);
-//   }
-//   res.status(200).json({
-//     result,
-//   });
-// };
 
 // get owner id info
 const getOwnerInfo = async (req, res) => {
@@ -91,20 +78,6 @@ const getOwnerInfo = async (req, res) => {
   });
 };
 
-// get one notice
-// const getOneNotice = async (req, res) => {
-//   const { noticeId } = req.params;
-//   const result = await Notice.findById(
-//     noticeId
-//   ).populate('owner', 'email phone');
-
-//   if (!result) {
-//    throw new ErrorConstructor(404, `Notice with id : ${noticeId} not found`);
-//   }
-//   res.status(200).json({
-//     result,
-//   });
-// };
 
 // getOwnerNotice
 const getOwnerNotices = async (req, res) => {
@@ -195,6 +168,7 @@ const getOwnerFavorites = async (req, res) => {
       'title category birthdate breed location sex imgURL owner'
     );
   const { favorites } = ownerFavorites;
+
 
   return res.status(200).json({ favorites });
 };
