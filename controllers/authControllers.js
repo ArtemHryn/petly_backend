@@ -7,6 +7,8 @@ const {
   updatePhoto,
   verifyUser,
   resendVerification,
+  requestPasswordReset,
+  restorePassword,
 } = require('../services/authServices');
 
 const registrationController = async (req, res) => {
@@ -58,6 +60,24 @@ const resendVerificationController = async (req, res) => {
   res.json({ message: 'Verification email sent' });
 };
 
+// --------------------------------------------------------------------
+
+const requestPasswordResetController = async (req, res) => {
+  const { email } = req.body;
+  await requestPasswordReset(email);
+  res.status(200).json({message: "Reset password link was sent succesfull"})
+}
+
+const restorePasswordController = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  await restorePassword(token, password);
+  res.status(200).json({
+    message: "Password was changed successfull",
+  });
+}
+
+
 module.exports = {
   registrationController,
   loginController,
@@ -67,4 +87,6 @@ module.exports = {
   updatePhotoController,
   verificationController,
   resendVerificationController,
+  requestPasswordResetController,
+  restorePasswordController
 };

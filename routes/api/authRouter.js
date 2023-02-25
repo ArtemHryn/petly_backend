@@ -8,6 +8,7 @@ const {
   registrationValidation,
   loginValidation,
   resendVerificationValidation,
+  ResetPasswordValidation
 } = require("../../middlewares/validation");
 
 const {
@@ -19,7 +20,9 @@ const {
   updatePhotoController,
   verificationController,
   resendVerificationController,
-} = require("../../controllers/authControllers");
+  requestPasswordResetController,
+  restorePasswordController,
+} = require('../../controllers/authControllers');
 const uploadCloud = require("../../middlewares/photosUploadMiddleware");
 
 router.post(
@@ -48,5 +51,11 @@ router.post(
   asyncWrapper(resendVerificationController)
 );
 
+
+router.post('/forgot-password', asyncWrapper(requestPasswordResetController));
+
+router.patch('/restore-password/:token', ResetPasswordValidation,
+  asyncWrapper(restorePasswordController)
+);
+
 module.exports = router;
- 

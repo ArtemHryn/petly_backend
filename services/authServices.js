@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
 const sha256 = require('sha256');
+const bcrypt = require('bcrypt')
 require('dotenv').config();
 
 const { ErrorConstructor } = require('../helper/errors');
 const { User } = require('../models/userModel');
 const { format } = require('date-fns');
-const sendMail = require('../helper/sendMail');
+const { sendMail, sendLinkResetPassword } = require('../helper/sendMail');
 const { checkCredentials } = require('../helper/checkCredentials');
 
 const registerUser = async body => {
@@ -97,6 +98,39 @@ const resendVerification = async email => {
   sendMail(email, 'verify', user.verificationToken);
 };
 
+
+const requestPasswordReset = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ErrorConstructor(401, 'Email does not found');
+  }
+  const resetToken = jwt.sign(
+    { userId: user._id },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: '365d',
+    }
+  );
+  user.resetToken = resetToken;
+  await sendLinkResetPassword(email, 'restore-password',  user.resetToken );
+  await user.save()
+}
+
+const restorePassword = async ( token, password ) => {
+  const user = await User.findOne({ resetToken: token });
+  if (!user) {
+    throw new ErrorConstructor(401, 'User not found');
+  }
+  const hashPassword = await bcrypt.hash(password, 1);
+  await User.findByIdAndUpdate(user._id, {
+    resetToken: '',
+    password: hashPassword,
+  });
+};
+
+
+
+
 module.exports = {
   registerUser,
   loginUser,
@@ -106,4 +140,6 @@ module.exports = {
   updatePhoto,
   verifyUser,
   resendVerification,
+  requestPasswordReset,
+  restorePassword
 };
