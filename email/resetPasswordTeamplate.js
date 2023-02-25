@@ -1,7 +1,7 @@
-const PETLY_SITE = "https://https://artemhryn.github.io/petly_frontend";
+const PETLY_SITE = 'https://artemhryn.github.io/petly_frontend/';
 
 const resetPasswordTeamplate = (way, resetToken) => {
-    return `<!doctype html>
+  return `<!doctype html>
 <html lang="en-US">
 
 <head>
@@ -26,7 +26,7 @@ const resetPasswordTeamplate = (way, resetToken) => {
                     </tr>
                     <tr>
                         <td style="text-align:center;">
-                          <a href="https://artemhryn.github.io/petly_frontend" title="logo" target="_blank">
+                          <a href="${PETLY_SITE}" title="logo" target="_blank">
                             <img width="120" src="https://i.ibb.co/pWgrX7n/petly.png" title="logo" alt="logo">
                           </a>
                         </td>
