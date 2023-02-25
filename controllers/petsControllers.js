@@ -1,35 +1,32 @@
-const { ErrorConstructor } = require('../helper/errors.js');
-const { Pet } = require('../models/petModel.js');
+const {
+  addPet,
+  deletePet,
+  getAllPetsByOwner,
+} = require('../services/petService.js');
 
-const addPet = async (req, res) => {
+const addPetController = async (req, res) => {
   const { _id } = req.user;
-  const result = await Pet.create({
-    ...req.body,
-    avatarURL: req.file.path,
-    owner: _id,
-  });
+  const result = await addPet(_id, req.body);
   res.status(201).json({ result });
 };
 
-const deletePetById = async (req, res) => {
+const deletePetController = async (req, res) => {
   const { myPetId } = req.params;
   const { _id: owner } = req.user;
-  const result = await Pet.findOneAndDelete({ _id: myPetId, owner });
-  if (!result) {
-    throw ErrorConstructor(404, 'Not found');
-  }
+  await deletePet(myPetId, owner);
+
   res.status(200).json({ message: 'Pet was deleted' });
 };
 
-const getAllPets = async (req, res) => {
+const getAllPetsController = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Pet.find({ owner });
+  const result = await getAllPetsByOwner(owner);
 
   res.status(200).json({ pets: result });
 };
 
 module.exports = {
-  addPet,
-  deletePetById,
-  getAllPets,
+  addPetController,
+  deletePetController,
+  getAllPetsController,
 };
