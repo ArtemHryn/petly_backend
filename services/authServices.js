@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const sha256 = require('sha256');
-const bcrypt = require('bcrypt')
 require('dotenv').config();
 
 const { ErrorConstructor } = require('../helper/errors');
@@ -20,7 +19,6 @@ const registerUser = async body => {
   const verificationToken = sha256(body.email + process.env.VERIFY_SALT);
   body.verificationToken = verificationToken;
   const user = new User(body);
-
   await user.save();
   sendMail(body.email, 'verify', verificationToken);
 
@@ -61,8 +59,8 @@ const updateUser = async (_id, body) => {
       body.birthday = format(new Date(parsedDate), 'yyyy-MM-dd');
     }
   } catch (error) {
-    const newDate = new Date('01-02-2000')
-    body.birthday = newDate.toUTCString() ;
+    const newDate = new Date('01-02-2000');
+    body.birthday = newDate.toUTCString();
   }
 
   Object.assign(user, body);
@@ -98,8 +96,7 @@ const resendVerification = async email => {
   sendMail(email, 'verify', user.verificationToken);
 };
 
-
-const requestPasswordReset = async (email) => {
+const requestPasswordReset = async email => {
   const user = await User.findOne({ email });
   if (!user) {
     throw new ErrorConstructor(401, 'Email does not found');
@@ -112,24 +109,18 @@ const requestPasswordReset = async (email) => {
     }
   );
   user.resetToken = resetToken;
-  await sendLinkResetPassword(email, 'restore-password',  user.resetToken );
-  await user.save()
-}
+  await sendLinkResetPassword(email, 'restore-password', user.resetToken);
+  await user.save();
+};
 
-const restorePassword = async ( token, password ) => {
+const restorePassword = async (token, password) => {
   const user = await User.findOne({ resetToken: token });
   if (!user) {
     throw new ErrorConstructor(401, 'User not found');
   }
-  const hashPassword = await bcrypt.hash(password, 1);
-  await User.findByIdAndUpdate(user._id, {
-    resetToken: '',
-    password: hashPassword,
-  });
+  user.password = password
+  user.save()
 };
-
-
-
 
 module.exports = {
   registerUser,
@@ -141,5 +132,5 @@ module.exports = {
   verifyUser,
   resendVerification,
   requestPasswordReset,
-  restorePassword
+  restorePassword,
 };
