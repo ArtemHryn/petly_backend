@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Verify token is required'],
     },
+    resetToken: {
+      type: String,
+      default: null,
+    }
   },
   { timestamps: true, versionKey: false }
 );

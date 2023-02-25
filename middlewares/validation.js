@@ -6,6 +6,7 @@ const { ErrorConstructor } = require('../helper/errors');
 const {
   resendVerificationValidationSchema,
 } = require('../utils/validation/authValidation/resendVerificationValidationSchema');
+const ResetPasswordSchema = require('../utils/validation/authValidation/resetPasswordValidationSchema');
 
 const registrationValidation = (req, res, next) => {
   const validationResult = RegisterUserSchema.validate(req.body);
@@ -49,10 +50,20 @@ const resendVerificationValidation = (req, res, next) => {
   next();
 };
 
+const ResetPasswordValidation = (req, res, next) => {
+  const validationResult = ResetPasswordSchema.validate(req.body);
+  if (validationResult.error) {
+    return res.status(400).json(validationResult.error.details);
+  }
+  next();
+};
+
+
 module.exports = {
   registrationValidation,
   loginValidation,
   noticeValidation,
   addPetValidation,
   resendVerificationValidation,
+  ResetPasswordValidation,
 };
