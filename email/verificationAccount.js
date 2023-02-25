@@ -1,4 +1,4 @@
-const PETLY_SITE = 'https://artemhryn.github.io/petly_frontend/';
+const PETLY_SITE = 'https://artemhryn.github.io/petly_frontend';
 
 const verificationAccountTeamplate = (way, verificationToken) => {
   return `<!doctype html>

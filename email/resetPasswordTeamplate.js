@@ -1,4 +1,4 @@
-const PETLY_SITE = 'https://artemhryn.github.io/petly_frontend/';
+const PETLY_SITE = 'https://artemhryn.github.io/petly_frontend';
 
 const resetPasswordTeamplate = (way, resetToken) => {
   return `<!doctype html>
