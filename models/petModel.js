@@ -9,7 +9,6 @@ const petSchema = new Schema(
     date: {
       type: String,
       default: ' 00/00/0000',
-      // required: [true, "Date must be in format 22.02.2023"],
     },
     breed: {
       type: String,

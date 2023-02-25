@@ -6,7 +6,8 @@ const {
 
 const addPetController = async (req, res) => {
   const { _id } = req.user;
-  const result = await addPet(_id, req.body);
+  const {path} = req.file
+  const result = await addPet(_id, req.body, path);
   res.status(201).json({ result });
 };
 

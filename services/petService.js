@@ -1,10 +1,10 @@
 const { Pet } = require('../models/petModel.js');
 const { ErrorConstructor } = require('../helper/errors.js');
 
-const addPet = async (userId, petData, avatarPath) => {
+const addPet = async (userId, petData, avatarURL) => {
   const result = await Pet.create({
     ...petData,
-    avatarURL: avatarPath,
+    avatarURL,
     owner: userId,
   });
   return result;
