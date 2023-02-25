@@ -335,6 +335,84 @@
         }
       }
     },
+    "users/forgot-password": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Forgot password",
+
+        "requestBody": {
+          "description": "Forgot password object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForgotPasswordResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      }
+    },
+    "users/restore-password/:token": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Restore password",
+
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "type": "string",
+            "description": "Restore password"
+          }
+        ],
+
+        "requestBody": {
+          "description": "Restore password object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestorePasswordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestorePasswordResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      }
+    },
     "news": {
       "get": {
         "tags": ["News"],
@@ -1116,6 +1194,50 @@
         },
         "example": { "message": "Verification email sent" }
       },
+      "ForgotPasswordRequest": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          }
+        },
+        "example": { "email": "user@mail.com"}
+      },
+      "ForgotPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Reset password link was sent successfully"
+          }
+        },
+        "example": { "message": "Reset password link was sent successfully" }
+      },
+      "RestorePasswordRequest": {
+        "type": "object",
+        "required": ["password"],
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        },
+        "example": { "password": "qwerty123" }
+      },
+      "RestorePasswordResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Password was changed successfully"
+          }
+        },
+        "example": { "message": "Password was changed successfully" }
+      },
       "GetNewsResponse": {
         "type": "array",
         "items": {
@@ -1180,7 +1302,7 @@
             },
             "imageUrl": {
               "type": "string",
-              "description": "Sponsor's logo date",
+              "description": "Sponsor's logo",
               "example": "https://www.facebook.com/photo/?fbid=156750233786595&set=a.156750217119930"
             },
             "address": {
@@ -1195,12 +1317,12 @@
             },
             "phone": {
               "type": "string",
-              "description": "New's description",
+              "description": "Sponsor contact phone number",
               "example": "066 488 0480"
             },
             "email": {
               "type": "string",
-              "description": "New's date",
+              "description": "Sponsor's mail",
               "format": "email"
             }
           }
