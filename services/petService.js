@@ -18,7 +18,8 @@ const deletePet = async (myPetId, owner) => {
 };
 
 const getAllPetsByOwner = async ownerId => {
-  const result = await Pet.find({ owner: ownerId });
+  const sorting = [['createdAt', -1]];
+  const result = await Pet.find({ owner: ownerId }).sort(sorting);
   return result;
 };
 
