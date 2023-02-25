@@ -1,4 +1,6 @@
 const sgMail = require('@sendgrid/mail');
+const resetPasswordTeamplate = require("../email/resetPasswordTeamplate")
+const verificationAccountTeamplate = require('../email/verificationAccount')
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -7,8 +9,7 @@ const sendMail = async (email, way, verificationToken) => {
     to: email,
     from: 'fsdeveloper@meta.ua',
     subject: 'Thank you for the registration',
-    text: `You have been registered on Petly, please, confirm your email address https://https://artemhryn.github.io/petly_frontend/${way}/${verificationToken}`,
-    html: `You have been registered on Petly, please, <a href="https://https://artemhryn.github.io/petly_frontend/${way}/${verificationToken}">Confirm</a> your email address`,
+    html: verificationAccountTeamplate(way, verificationToken),
   };
 
   await sgMail
@@ -26,8 +27,7 @@ const sendLinkResetPassword = async (email, way, resetToken) => {
     to: email,
     from: 'fsdeveloper@meta.ua', // Use the email address or domain you verified above
     subject: 'Reset your password',
-    text: `You have been reset password on Petly, please, confirm your email address https://https://artemhryn.github.io/petly_frontend/${way}/${resetToken}`,
-    html: `You have been reset password on Petly, please, <a href="https://https://artemhryn.github.io/petly_frontend/${way}/${resetToken}">Reset password</a> your email address`,
+    html: resetPasswordTeamplate(way, resetToken),
   };
   await sgMail
     .send(msgReset)
