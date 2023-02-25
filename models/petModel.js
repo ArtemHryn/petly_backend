@@ -27,7 +27,7 @@ const petSchema = new Schema(
       required: true,
     },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: { createdAt: true, updatedAt: false } }
 );
 
 const Pet = model('pet', petSchema);
