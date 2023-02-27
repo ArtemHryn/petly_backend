@@ -50,7 +50,7 @@ const verificationAccountTeamplate = (way, verificationToken) => {
                                         <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
                                             You have already signed up for Petly! The last step is to activate your account. Activate your account by following the link.
                                         </p>
-                                        <a href="${PETLY_SITE}/${way}/${verificationToken}" style="background:#F59256;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Confirm
+                                        <a target="_blank" href="${PETLY_SITE}/${way}/${verificationToken}" style="background:#F59256;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Confirm
                       Email</a>
                   </td>
                 </tr>
