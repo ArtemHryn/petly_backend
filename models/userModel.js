@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcryptjs = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
@@ -55,7 +55,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function () {
   if (this.isNew || this.isModified) {
-    this.password = await bcrypt.hash(this.password, 10);
+    this.password = await bcryptjs.hash(this.password, 10);
   }
 });
 
