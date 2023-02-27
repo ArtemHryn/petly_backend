@@ -15,8 +15,6 @@ router.post(
 
 router.get('/owner', checkJWT, controller.getOwnerNotices);
 
-// router.get('/notice/:noticeId', asyncWrapper(controller.getOneNotice));
-
 router.get('/notice/:ownerId', asyncWrapper(controller.getOwnerInfo));
 
 router.get('/:category', asyncWrapper(controller.getAllNotices));

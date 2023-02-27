@@ -159,6 +159,7 @@ const removeOwnerFavorit = async (req, res) => {
 // get owner favorites list
 const getOwnerFavorites = async (req, res) => {
   const { _id: userId } = req.user;
+
   const sorting = [['createdAt', -1]];
 
   const ownerFavorites = await User.findById(userId)
@@ -169,7 +170,6 @@ const getOwnerFavorites = async (req, res) => {
     );
   const { favorites } = ownerFavorites;
 
-
   return res.status(200).json({ favorites });
 };
 
@@ -177,7 +177,6 @@ module.exports = {
   getAllNotices,
   addNotice,
   getOwnerInfo,
-  // getOneNotice,
   getOwnerNotices,
   deleteOwnerNotice,
   addOwnerFavorit,

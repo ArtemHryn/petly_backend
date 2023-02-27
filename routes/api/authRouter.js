@@ -51,7 +51,6 @@ router.post(
   asyncWrapper(resendVerificationController)
 );
 
-
 router.post('/forgot-password', asyncWrapper(requestPasswordResetController));
 
 router.patch('/restore-password/:token', ResetPasswordValidation,

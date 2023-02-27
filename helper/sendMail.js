@@ -1,13 +1,14 @@
 const sgMail = require('@sendgrid/mail');
 const resetPasswordTeamplate = require("../email/resetPasswordTeamplate")
 const verificationAccountTeamplate = require('../email/verificationAccount')
+require('dotenv').config();
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendMail = async (email, way, verificationToken) => {
   const msg = {
     to: email,
-    from: 'fsdeveloper@meta.ua',
+    from: process.env.SENDER,
     subject: 'Thank you for the registration',
     html: verificationAccountTeamplate(way, verificationToken),
   };
@@ -25,7 +26,7 @@ const sendMail = async (email, way, verificationToken) => {
 const sendLinkResetPassword = async (email, way, resetToken) => {
   const msgReset = {
     to: email,
-    from: 'fsdeveloper@meta.ua', // Use the email address or domain you verified above
+    from: process.env.SENDER, // Use the email address or domain you verified above
     subject: 'Reset your password',
     html: resetPasswordTeamplate(way, resetToken),
   };

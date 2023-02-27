@@ -5,9 +5,6 @@ const router = express.Router();
 const checkJWT = require('../../middlewares/authTokenCheck');
 
 const {
-  // addPet,
-  // deletePetById,
-  // getAllPets,
   deletePetController,
   getAllPetsController,
   addPetController,
