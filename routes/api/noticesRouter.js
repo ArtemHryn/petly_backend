@@ -10,37 +10,37 @@ const { noticeValidation } = require('../../middlewares/validation');
 router.post(
   '/',
   [checkJWT, uploadCloud.single('noticeAvatar'), noticeValidation],
-  asyncWrapper(controller.addNotice)
+  asyncWrapper(controller.addNoticeController)
 );
 
-router.get('/owner', checkJWT, controller.getOwnerNotices);
+router.get('/owner', checkJWT, controller.getOwnerNoticesController);
 
-router.get('/notice/:ownerId', asyncWrapper(controller.getOwnerInfo));
+router.get('/notice/:ownerId', asyncWrapper(controller.getOwnerInfoController));
 
-router.get('/:category', asyncWrapper(controller.getAllNotices));
+router.get('/:category', asyncWrapper(controller.getAllNoticesController));
 
 router.delete(
   '/:noticeId',
   checkJWT,
-  asyncWrapper(controller.deleteOwnerNotice)
+  asyncWrapper(controller.deleteOwnerNoticeController)
 );
 
 router.patch(
   '/favorites/:noticeId',
   checkJWT,
-  asyncWrapper(controller.addOwnerFavorit)
+  asyncWrapper(controller.addOwnerFavoritController)
 );
 
 router.get(
   '/favorites/all',
   checkJWT,
-  asyncWrapper(controller.getOwnerFavorites)
+  asyncWrapper(controller.getOwnerFavoritesController)
 );
 
 router.put(
   '/favorites/:noticeId',
   checkJWT,
-  asyncWrapper(controller.removeOwnerFavorit)
+  asyncWrapper(controller.removeOwnerFavoritController)
 );
 
 module.exports = router;

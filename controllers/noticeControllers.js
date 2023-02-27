@@ -4,7 +4,7 @@ const { ErrorConstructor } = require('../helper/errors');
 const { format } = require('date-fns');
 
 // create users notice
-const addNotice = async (req, res) => {
+const addNoticeController = async (req, res) => {
   const { _id } = req.user;
   const { email, phone } = await User.findById(_id);
   try {
@@ -28,13 +28,12 @@ const addNotice = async (req, res) => {
 
 // get all noties from category or title
 
-const getAllNotices = async (req, res) => {
+const getAllNoticesController = async (req, res) => {
   const { category } = req.params;
   const { page = 1, limit = 8, query } = req.query;
   if (!category) {
     throw new ErrorConstructor(400, 'Please, select category');
   }
-
 
   const options =
     query === '' || !query
@@ -49,7 +48,7 @@ const getAllNotices = async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  const allNotice = await Notice.countDocuments(options)
+  const allNotice = await Notice.countDocuments(options);
 
   const sorting = [['createdAt', -1]];
 
@@ -64,9 +63,8 @@ const getAllNotices = async (req, res) => {
   res.json({ totalPages: Math.ceil(allNotice / 8), page, result: result });
 };
 
-
 // get owner id info
-const getOwnerInfo = async (req, res) => {
+const getOwnerInfoController = async (req, res) => {
   const { ownerId } = req.params;
   const { phone, email } = await User.findById(ownerId);
   if (!ownerId) {
@@ -78,13 +76,18 @@ const getOwnerInfo = async (req, res) => {
   });
 };
 
-
 // getOwnerNotice
-const getOwnerNotices = async (req, res) => {
+const getOwnerNoticesController = async (req, res) => {
   const { _id: userId } = req.user;
+  const { query } = req.query;
   const sorting = [['createdAt', -1]];
 
-  const notices = await Notice.find({ owner: userId }).sort(sorting);
+  const notices = await Notice.find({ owner: userId })
+    .or([
+      { title: { $regex: query, $options: 'i' } },
+      { breed: { $regex: query, $options: 'i' } },
+    ])
+    .sort(sorting);
   if (!notices) {
     throw new ErrorConstructor(404, 'Not Found');
   }
@@ -94,7 +97,7 @@ const getOwnerNotices = async (req, res) => {
 };
 
 // delete owner notice
-const deleteOwnerNotice = async (req, res) => {
+const deleteOwnerNoticeController = async (req, res) => {
   const { _id: userId } = req.user;
   const { noticeId } = req.params;
 
@@ -111,7 +114,7 @@ const deleteOwnerNotice = async (req, res) => {
 
 // Add favorite
 
-const addOwnerFavorit = async (req, res) => {
+const addOwnerFavoritController = async (req, res) => {
   const { _id: userId } = req.user;
   const { noticeId: id } = req.params;
 
@@ -137,7 +140,7 @@ const addOwnerFavorit = async (req, res) => {
 
 // remove owner favorites notice
 
-const removeOwnerFavorit = async (req, res) => {
+const removeOwnerFavoritController = async (req, res) => {
   const { _id: userId } = req.user;
   const { noticeId: id } = req.params;
   const result = await Notice.findById(id);
@@ -157,29 +160,36 @@ const removeOwnerFavorit = async (req, res) => {
 };
 
 // get owner favorites list
-const getOwnerFavorites = async (req, res) => {
+const getOwnerFavoritesController = async (req, res) => {
   const { _id: userId } = req.user;
-
+  const { query } = req.query;
   const sorting = [['createdAt', -1]];
+  const filter = query
+    ? {
+        $or: [
+          { title: { $regex: query, $options: 'i' } },
+          { breed: { $regex: query, $options: 'i' } },
+        ],
+      }
+    : {};
 
-  const ownerFavorites = await User.findById(userId)
-    .sort(sorting)
-    .populate(
-      'favorites',
-      'title category birthdate breed location sex imgURL owner'
-    );
+  const ownerFavorites = await User.findById(userId).sort(sorting).populate({
+    path: 'favorites',
+    select: 'title category birthdate breed location sex imgURL owner',
+    match: filter,
+  });
   const { favorites } = ownerFavorites;
-
+  
   return res.status(200).json({ favorites });
 };
 
 module.exports = {
-  getAllNotices,
-  addNotice,
-  getOwnerInfo,
-  getOwnerNotices,
-  deleteOwnerNotice,
-  addOwnerFavorit,
-  removeOwnerFavorit,
-  getOwnerFavorites,
+  getAllNoticesController,
+  addNoticeController,
+  getOwnerInfoController,
+  getOwnerNoticesController,
+  deleteOwnerNoticeController,
+  addOwnerFavoritController,
+  removeOwnerFavoritController,
+  getOwnerFavoritesController,
 };
